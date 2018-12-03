@@ -61,15 +61,43 @@ namespace AdventOfCode2018.Day02
 
         public static void Task2(string[] lines)
         {
-            List<char> sameChars = new List<char>();
+            byte lowestCharDiff = byte.MaxValue;
+            string[] sameLines = new string[2];
 
             for(int i = 0; i < lines.Length - 1; i++)
             {
                 for (int j = i + 1; j < lines.Length; j++)
                 {
+                    byte lineDiff = 0;
 
+                    for (int x = 0; x < lines[i].Length; x++)
+                    {
+                        if (lines[i][x] != lines[j][x])
+                        {
+                            lineDiff++;
+                        }
+                    }
+
+                    if (lineDiff < lowestCharDiff)
+                    {
+                        lowestCharDiff = lineDiff;
+                        sameLines[0] = lines[i];
+                        sameLines[1] = lines[j];
+                    }
                 }
             }
+
+            string commonLetters = "";
+
+            for(int i = 0; i < sameLines[0].Length; i++)
+            {
+                if(sameLines[0][i] == sameLines[1][i])
+                {
+                    commonLetters += sameLines[0][i];
+                }
+            }
+
+            Console.WriteLine(commonLetters);
         }
     }
 }
