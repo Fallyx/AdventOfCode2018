@@ -9,6 +9,9 @@
 
             string[] lines = Day02.Tasks.Task1();
             Day02.Tasks.Task2(lines);
+
+            Day03.Tasks.Task1();
+            Day03.Tasks.Task2();
         }
     }
 }
