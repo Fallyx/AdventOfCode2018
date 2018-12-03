@@ -1,19 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
-using System.Text.RegularExpressions;
 
 namespace AdventOfCode2018.Day03
 {
     class Tasks
     {
+        const string inputPath = @"Day03/Input.txt";
+
         public static void Task1()
         {
-            
-            using (StreamReader reader = new StreamReader(@"Day03/Input.txt"))
+            using (StreamReader reader = new StreamReader(inputPath))
             {
                 string line;
 
@@ -58,7 +54,7 @@ namespace AdventOfCode2018.Day03
             int[,] fabric = new int[1000, 1000];
             int uniqueID = 0;
 
-            using (StreamReader reader = new StreamReader(@"Day03/Input.txt"))
+            using (StreamReader reader = new StreamReader(inputPath))
             {
                 string line;
 
@@ -84,7 +80,7 @@ namespace AdventOfCode2018.Day03
                 }
             }
 
-            using (StreamReader reader = new StreamReader(@"Day03/Input.txt"))
+            using (StreamReader reader = new StreamReader(inputPath))
             {
                 string line;
 

@@ -6,6 +6,8 @@ namespace AdventOfCode2018.Day02
 {
     class Tasks
     {
+        const string inputPath = @"Day02/Input.txt";
+
         public static String[] Task1()
         {
             int twoTimes = 0;
@@ -13,7 +15,7 @@ namespace AdventOfCode2018.Day02
             string line;
             List<string> lines = new List<string>();
 
-            using (StreamReader reader = new StreamReader(@"Day02/Input.txt"))
+            using (StreamReader reader = new StreamReader(inputPath))
             {
                 while ((line = reader.ReadLine()) != null)
                 {
