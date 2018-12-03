@@ -15,14 +15,7 @@ namespace AdventOfCode2018.Day01
 
             while ((line = sr.ReadLine()) != null)
             {
-                if (line[0] == '+')
-                {
-                    frequency += int.Parse(line.Substring(1));
-                }
-                else
-                {
-                    frequency -= int.Parse(line.Substring(1));
-                }
+                frequency += int.Parse(line);
             }
 
             Console.WriteLine(frequency);
@@ -41,14 +34,7 @@ namespace AdventOfCode2018.Day01
                 {
                     while ((line = reader.ReadLine()) != null)
                     {
-                        if (line[0] == '+')
-                        {
-                            frequency += int.Parse(line.Substring(1));
-                        }
-                        else
-                        {
-                            frequency -= int.Parse(line.Substring(1));
-                        }
+                        frequency += int.Parse(line);
 
                         if (freqs.ContainsKey(frequency))
                         {

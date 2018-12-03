@@ -6,6 +6,9 @@
         {
             Day01.Tasks.Task1();
             Day01.Tasks.Task2();
+
+            string[] lines = Day02.Tasks.Task1();
+            Day02.Tasks.Task2(lines);
         }
     }
 }
