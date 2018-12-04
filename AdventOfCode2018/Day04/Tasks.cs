@@ -100,6 +100,81 @@ namespace AdventOfCode2018.Day04
             }
             Console.WriteLine(sleepiestGuardId * day);
         }
+
+        public static void Task2()
+        {
+            SortedDictionary<DateTime, string> inputDict = new SortedDictionary<DateTime, string>();
+            Dictionary<int, List<SleepTime>> guardAction = new Dictionary<int, List<SleepTime>>();
+
+            using (StreamReader reader = new StreamReader(inputPath))
+            {
+                string line;
+
+                while ((line = reader.ReadLine()) != null)
+                {
+                    string[] tmp = line.Split(']');
+                    inputDict.Add(DateTime.Parse(tmp[0].Substring(1)), tmp[1].Substring(1));
+                }
+            }
+
+            int id = 0;
+            DateTime startSleep = new DateTime();
+
+            Regex guardId = new Regex(@"#\d+");
+            foreach (KeyValuePair<DateTime, string> action in inputDict)
+            {
+                if (action.Value.StartsWith("Guard"))
+                {
+                    Match m = guardId.Match(action.Value);
+
+                    if (m.Success)
+                    {
+                        id = int.Parse(m.Value.Substring(1));
+                        if (!guardAction.ContainsKey(id))
+                        {
+                            List<SleepTime> list = new List<SleepTime>();
+                            guardAction.Add(id, list);
+                        }
+                    }
+                }
+                else if (action.Value.StartsWith("wakes"))
+                {
+                    List<SleepTime> list = guardAction[id];
+                    SleepTime tmp = new SleepTime(startSleep, action.Key);
+                    list.Add(tmp);
+                    guardAction[id] = list;
+                }
+                else if (action.Value.StartsWith("falls"))
+                {
+                    startSleep = action.Key;
+                }
+            }
+
+            int guardID = 0;
+            int frequentMin = 0;
+            int frequentSleep = 0;
+
+            foreach(KeyValuePair<int, List<SleepTime>> guard in guardAction)
+            {
+                int[] minutes = new int[60];
+                for (int i = 0; i < guard.Value.Count; i++)
+                {
+                    for (int x = guard.Value[i].StartSleep.Minute; x <= guard.Value[i].EndSleep.Minute; x++)
+                    {
+                        minutes[x] += 1;
+                    }
+                }
+
+                if(frequentSleep < minutes.Max())
+                {
+                    guardID = guard.Key;
+                    frequentSleep = minutes.Max();
+                    frequentMin = minutes.ToList().IndexOf(minutes.Max());
+                }
+            }
+
+            Console.WriteLine(guardID * frequentMin);
+        }
     }
 
     class SleepTime
