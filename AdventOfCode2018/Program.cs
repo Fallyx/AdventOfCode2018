@@ -12,6 +12,8 @@
 
             Day03.Tasks.Task1();
             Day03.Tasks.Task2();
+
+            Day04.Tasks.Task1();
         }
     }
 }
