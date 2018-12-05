@@ -14,25 +14,27 @@ namespace AdventOfCode2018.Day05
         public static void Task1()
         {
             string input;
-            
+
             using (StreamReader reader = new StreamReader(inputPath))
             {
                 input = reader.ReadToEnd();
-            }
+            }           
             
             List<char> inputChar = input.ToList();
+            Stack<Char> stackChar = new Stack<char>();
 
-            for(int i = 0; i < inputChar.Count - 1; i++)
+            foreach (char c in inputChar)
             {
-                if((inputChar[i] + 32) == inputChar[i+1] || (inputChar[i] - 32) == inputChar[i+1])
+                if (stackChar.Count == 0) stackChar.Push(c);
+                else
                 {
-                    inputChar.RemoveAt(i);
-                    inputChar.RemoveAt(i);
-                    i = -1;
+                    char cS = stackChar.Peek();
+                    if ((c + 32) == cS || (c - 32) == cS) stackChar.Pop();
+                    else stackChar.Push(c);
                 }
             }
 
-            Console.WriteLine(inputChar.Count);
+            Console.WriteLine(stackChar.Count);
         }
 
         public static void Task2()
@@ -49,19 +51,21 @@ namespace AdventOfCode2018.Day05
             for(int x = 0; x < 26; x++)
             {
                 List<char> inputChar = input.ToList();
-                inputChar.RemoveAll(c => c == 65+x || c == 97+x);
+                inputChar.RemoveAll(c => c == 65 + x || c == 97 + x);
+                Stack<Char> stackChar = new Stack<char>();
 
-                for (int i = 0; i < inputChar.Count - 1; i++)
+                foreach (char c in inputChar)
                 {
-                    if ((inputChar[i] + 32) == inputChar[i + 1] || (inputChar[i] - 32) == inputChar[i + 1])
+                    if (stackChar.Count == 0) stackChar.Push(c);
+                    else
                     {
-                        inputChar.RemoveAt(i);
-                        inputChar.RemoveAt(i);
-                        i = -1;
+                        char cS = stackChar.Peek();
+                        if ((c + 32) == cS || (c - 32) == cS) stackChar.Pop();
+                        else stackChar.Push(c);
                     }
                 }
 
-                if (inputChar.Count < shortestPolymer) shortestPolymer = inputChar.Count;
+                if (stackChar.Count < shortestPolymer) shortestPolymer = stackChar.Count;
             }
 
             Console.WriteLine(shortestPolymer);

@@ -14,6 +14,7 @@ namespace AdventOfCode2018.Day02
             int threeTimes = 0;
             string line;
             List<string> lines = new List<string>();
+            Dictionary<char, int> letters = new Dictionary<char, int>();
 
             using (StreamReader reader = new StreamReader(inputPath))
             {
@@ -22,7 +23,6 @@ namespace AdventOfCode2018.Day02
                     bool hasTwo = false;
                     bool hasThree = false;
                     
-                    Dictionary<char, int> letters = new Dictionary<char, int>();
                     for(int i = 0; i < line.Length; i++)
                     {
                         if(letters.ContainsKey(line[i]))
@@ -47,6 +47,8 @@ namespace AdventOfCode2018.Day02
                             threeTimes++;
                             hasThree = true;
                         }
+
+                        if (hasTwo && hasThree) break;
                     }
 
                     if(hasTwo || hasThree)
