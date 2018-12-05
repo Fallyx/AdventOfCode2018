@@ -17,6 +17,7 @@
             Day04.Tasks.Task2();
 
             Day05.Tasks.Task1();
+            Day05.Tasks.Task2();
         }
     }
 }
