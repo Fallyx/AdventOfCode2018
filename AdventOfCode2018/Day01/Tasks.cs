@@ -42,7 +42,8 @@ namespace AdventOfCode2018.Day01
                             breakLoop = true;
                             break;
                         }
-                        else freqs.Add(frequency);
+
+                        freqs.Add(frequency);
                     }
                 }
             }

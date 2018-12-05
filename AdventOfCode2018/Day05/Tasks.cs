@@ -16,10 +16,12 @@ namespace AdventOfCode2018.Day05
             string input = "";
             int polymer = 0;
 
+            
             using (StreamReader reader = new StreamReader(inputPath))
             {
                 input = reader.ReadToEnd();
             }
+            
 
             List<char> inputChar = input.ToList();
 
@@ -29,30 +31,11 @@ namespace AdventOfCode2018.Day05
                 {
                     inputChar.RemoveAt(i);
                     inputChar.RemoveAt(i);
-                    i--;
+                    i = -1;
                 }
             }
 
             Console.WriteLine(inputChar.Count);
-
-            /*
-            for (int i = 0; i < input.Length - 1; i++)
-            {
-                string current = input[i].ToString();
-                string next = input[i + 1].ToString(); 
-
-                if (current.ToUpper() == next || current.ToLower() == next)
-                {
-                    i++;
-                }
-                else
-                {
-                    polymer++;
-                }
-            }
-
-            Console.WriteLine(polymer);
-            */
         }
     }
 }
