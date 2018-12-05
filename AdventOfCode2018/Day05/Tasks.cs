@@ -14,15 +14,12 @@ namespace AdventOfCode2018.Day05
         public static void Task1()
         {
             string input = "";
-            int polymer = 0;
-
             
             using (StreamReader reader = new StreamReader(inputPath))
             {
                 input = reader.ReadToEnd();
             }
             
-
             List<char> inputChar = input.ToList();
 
             for(int i = 0; i < inputChar.Count - 1; i++)

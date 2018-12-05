@@ -14,13 +14,13 @@ namespace AdventOfCode2018.Day04
         public static void Task1()
         {
             SortedDictionary<DateTime, string> inputDict = new SortedDictionary<DateTime, string>();
-            Dictionary<int, List<SleepTime>> guardAction = new Dictionary<int, List<SleepTime>>();
+            Dictionary<int, int[]> guardSleep = new Dictionary<int, int[]>();
 
             using (StreamReader reader = new StreamReader(inputPath))
             {
                 string line;
 
-                while((line = reader.ReadLine()) != null)
+                while ((line = reader.ReadLine()) != null)
                 {
                     string[] tmp = line.Split(']');
                     inputDict.Add(DateTime.Parse(tmp[0].Substring(1)), tmp[1].Substring(1));
@@ -29,8 +29,8 @@ namespace AdventOfCode2018.Day04
 
             int id = 0;
             DateTime startSleep = new DateTime();
-
             Regex guardId = new Regex(@"#\d+");
+
             foreach (KeyValuePair<DateTime, string> action in inputDict)
             {
                 if (action.Value.StartsWith("Guard"))
@@ -40,19 +40,22 @@ namespace AdventOfCode2018.Day04
                     if (m.Success)
                     {
                         id = int.Parse(m.Value.Substring(1));
-                        if (!guardAction.ContainsKey(id))
+                        if (!guardSleep.ContainsKey(id))
                         {
-                            List<SleepTime> list = new List<SleepTime>();
-                            guardAction.Add(id, list);
+                            int[] mins = new int[60];
+                            guardSleep.Add(id, mins);
                         }
                     }
                 }
                 else if (action.Value.StartsWith("wakes"))
                 {
-                    List<SleepTime> list = guardAction[id];
-                    SleepTime tmp = new SleepTime(startSleep, action.Key);
-                    list.Add(tmp);
-                    guardAction[id] = list;
+                    int[] tmp = guardSleep[id];
+
+                    for(int i = startSleep.Minute; i <= action.Key.Minute; i++)
+                    {
+                        tmp[i] += 1;
+                    }
+                    guardSleep[id] = tmp;
                 }
                 else if (action.Value.StartsWith("falls"))
                 {
@@ -60,44 +63,8 @@ namespace AdventOfCode2018.Day04
                 }
             }
 
-            int sleepiestGuardId = 0;
-            int longestTotSleep = 0;
-
-            foreach (KeyValuePair<int, List<SleepTime>> guard in guardAction)
-            {
-                int totSleep = 0;
-                for (int i = 0; i < guard.Value.Count; i++)
-                {
-                    totSleep += guard.Value[i].MinOfSleep;
-                }
-
-                if (totSleep > longestTotSleep)
-                {
-                    longestTotSleep = totSleep;
-                    sleepiestGuardId = guard.Key;
-                }
-            }
-
-            int[] minutes = new int[60];
-
-            for (int i = 0; i < guardAction[sleepiestGuardId].Count; i++)
-            {
-                for (int x = guardAction[sleepiestGuardId][i].StartSleep.Minute; x <= guardAction[sleepiestGuardId][i].EndSleep.Minute; x++)
-                {
-                    minutes[x] += 1;
-                }
-            }
-
-            int day = 0;
-            int maxSleep = 0;
-            for (int i = 0; i < minutes.Length; i++)
-            {
-                if (minutes[i] > maxSleep)
-                {
-                    maxSleep = minutes[i];
-                    day = i;
-                }
-            }
+            int sleepiestGuardId = guardSleep.Aggregate((l, r) => l.Value.Sum() > r.Value.Sum() ? l : r).Key;
+            int day = guardSleep[sleepiestGuardId].ToList().IndexOf(guardSleep[sleepiestGuardId].Max());
             Console.WriteLine(sleepiestGuardId * day);
         }
 
