@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace AdventOfCode2018.Day02
 {
@@ -14,47 +15,39 @@ namespace AdventOfCode2018.Day02
             int threeTimes = 0;
             string line;
             List<string> lines = new List<string>();
-            Dictionary<char, int> letters = new Dictionary<char, int>();
 
             using (StreamReader reader = new StreamReader(inputPath))
             {
                 while ((line = reader.ReadLine()) != null)
                 {
-                    bool hasTwo = false;
-                    bool hasThree = false;
                     
+                    int[] letters = new int[26];
+                    bool added = false;
+
                     for(int i = 0; i < line.Length; i++)
                     {
-                        if(letters.ContainsKey(line[i]))
-                        {
-                            letters[line[i]] += 1;
-                        }
-                        else
-                        {
-                            letters.Add(line[i], 1);
-                        }
+                        letters[line[i] - 97]++;
                     }
 
-                    foreach (var pair in letters)
+                    List<int> listLetters = letters.ToList();
+                    if (listLetters.Exists(l => l == 2))
                     {
-                        if(pair.Value == 2 && !hasTwo)
+                        twoTimes++;
+                        if (!added)
                         {
-                            twoTimes++;
-                            hasTwo = true;
+                            lines.Add(line);
+                            added = true;
                         }
-                        else if(pair.Value == 3 && !hasThree)
-                        {
-                            threeTimes++;
-                            hasThree = true;
-                        }
-
-                        if (hasTwo && hasThree) break;
                     }
-
-                    if(hasTwo || hasThree)
+                    if (listLetters.Exists(l => l == 3))
                     {
-                        lines.Add(line);
-                    }
+                        threeTimes++;
+                        if(!added)
+                        {
+                            lines.Add(line);
+                            added = true;
+                        }
+                    }    
                 }    
             }
 
@@ -65,22 +58,16 @@ namespace AdventOfCode2018.Day02
 
         public static void Task2(string[] lines)
         {
-            byte lowestCharDiff = byte.MaxValue;
+            int lowestCharDiff = byte.MaxValue;
             string[] sameLines = new string[2];
 
             for(int i = 0; i < lines.Length - 1; i++)
             {
                 for (int j = i + 1; j < lines.Length; j++)
                 {
-                    byte lineDiff = 0;
+                    int lineDiff = 0;
 
-                    for (int x = 0; x < lines[i].Length; x++)
-                    {
-                        if (lines[i][x] != lines[j][x])
-                        {
-                            lineDiff++;
-                        }
-                    }
+                    lineDiff = lines[i].Zip<char, char, int>(lines[j], (a, b) => (a != b) ? lineDiff++ : lineDiff + 0).Max();
 
                     if (lineDiff < lowestCharDiff)
                     {
@@ -93,13 +80,9 @@ namespace AdventOfCode2018.Day02
 
             string commonLetters = "";
 
-            for(int i = 0; i < sameLines[0].Length; i++)
-            {
-                if(sameLines[0][i] == sameLines[1][i])
-                {
-                    commonLetters += sameLines[0][i];
-                }
-            }
+            var tmp = sameLines[0].Zip<char, char, char>(sameLines[1], (a, b) => (a == b) ? a : ' ');
+
+            commonLetters = new string(tmp.Where(c => !Char.IsWhiteSpace(c)).ToArray());
 
             Console.WriteLine(commonLetters);
         }
