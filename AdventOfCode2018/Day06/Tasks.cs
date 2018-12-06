@@ -29,16 +29,16 @@ namespace AdventOfCode2018.Day06
             int maxX = lines.Max(i => i.x) + 1;
             int maxY = lines.Max(i => i.y) + 1;
 
-            (int id ,int distanceFromCenter)[] location = new (int, int)[maxX * maxY];
+            (int id, int distanceFromCenter)[] location = new (int, int)[maxX * maxY];
 
-            for(int i = 0; i < location.Length; i++)
+            for (int i = 0; i < location.Length; i++)
             {
                 location[i].distanceFromCenter = int.MaxValue;
             }
 
-            for(int y = 0; y < maxY; y++)
+            for (int y = 0; y < maxY; y++)
             {
-                for(int x = 0; x < maxX; x++)
+                for (int x = 0; x < maxX; x++)
                 {
                     int idx = y * maxX + x;
 
@@ -50,7 +50,7 @@ namespace AdventOfCode2018.Day06
                         {
                             location[idx].id = -1;
                         }
-                        else if(location[idx].distanceFromCenter > distance)
+                        else if (location[idx].distanceFromCenter > distance)
                         {
                             location[idx].id = i;
                             location[idx].distanceFromCenter = distance;
@@ -59,20 +59,20 @@ namespace AdventOfCode2018.Day06
                 }
             }
 
-            for(int y = 0; y < maxY; y++)
+            for (int y = 0; y < maxY; y++)
             {
-                if(y == 0 || y == maxY - 1)
+                if (y == 0 || y == maxY - 1)
                 {
-                    for(int x = 0; x < maxX; x++)
+                    for (int x = 0; x < maxX; x++)
                     {
                         int idx = location[y * maxX + x].id;
-                        for(int i = 0; i < location.Length; i++)
+                        for (int i = 0; i < location.Length; i++)
                         {
                             if (location[i].id == idx) location[i].id = -1;
                         }
                     }
                 }
-                if(location[y * maxX].id != -1)
+                if (location[y * maxX].id != -1)
                 {
                     int idx = location[y * maxX].id;
                     for (int i = 0; i < location.Length; i++)
@@ -80,7 +80,7 @@ namespace AdventOfCode2018.Day06
                         if (location[i].id == idx) location[i].id = -1;
                     }
                 }
-                if(y != 0 && location[y * maxX - 1].id != -1)
+                if (y != 0 && location[y * maxX - 1].id != -1)
                 {
                     int idx = location[y * maxX - 1].id;
                     for (int i = 0; i < location.Length; i++)
@@ -92,10 +92,10 @@ namespace AdventOfCode2018.Day06
 
             Dictionary<int, int> finiteLocations = new Dictionary<int, int>();
 
-            foreach((int i, int d) l in location)
+            foreach ((int i, int d) l in location)
             {
                 if (l.i == -1) continue;
-                if(finiteLocations.ContainsKey(l.i))
+                if (finiteLocations.ContainsKey(l.i))
                 {
                     finiteLocations[l.i]++;
                 }
@@ -128,13 +128,13 @@ namespace AdventOfCode2018.Day06
 
             int[] totDistance = new int[maxX * maxY];
 
-            for(int y = 0; y < maxY; y++)
+            for (int y = 0; y < maxY; y++)
             {
-                for(int x = 0; x < maxX; x++)
+                for (int x = 0; x < maxX; x++)
                 {
                     int distance = 0;
 
-                    foreach((int lx, int ly) l in lines)
+                    foreach ((int lx, int ly) l in lines)
                     {
                         distance += Math.Abs(l.lx - x) + Math.Abs(l.ly - y);
                     }
@@ -145,5 +145,5 @@ namespace AdventOfCode2018.Day06
 
             Console.WriteLine(totDistance.Count(c => c < 10000));
         }
-    }    
+    }
 }
