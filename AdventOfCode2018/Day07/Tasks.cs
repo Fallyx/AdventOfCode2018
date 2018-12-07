@@ -12,56 +12,38 @@ namespace AdventOfCode2018.Day07
     {
         const string inputPath = @"Day07/Input.txt";
 
-        public static string Task1()
+        public static void Task1()
         {
-            string[] prerequisite = new string[26];
+            List<(string letter, string prereq)> stepReq = new List<(string, string)>();
             string buildingOrder = "";
 
             using (StreamReader reader = new StreamReader(inputPath))
             {
                 string line;
 
-                Regex capitalLetterRgx = new Regex("[A-Z]");
                 while ((line = reader.ReadLine()) != null)
                 {
-                    MatchCollection m = capitalLetterRgx.Matches(line);
-
-                    if(m.Count == 3)
-                    {
-                        prerequisite[(m[2].Value[0] - 65)] += m[1].Value;
-                    }
+                    stepReq.Add((line.ElementAt(36).ToString(), line.ElementAt(5).ToString()));
                 }
             }
 
-            List<string> prereq = prerequisite.ToList();
+            List<string> steps = stepReq.Select(l => l.letter).Concat(stepReq.Select(p => p.prereq)).Distinct().OrderBy(l => l).ToList();
 
-            while(prereq.FindIndex(s => string.IsNullOrEmpty(s)) != -1)
+            while(steps.Count != 0)
             {
-                int idx = prereq.FindIndex(s => string.IsNullOrEmpty(s));
+                string step = steps.Where(l => !stepReq.Any(p => p.letter == l)).First();
 
-                string letter = ((char)(65 + idx)).ToString();
-
-                buildingOrder += letter;
-                prereq[idx] = "0";
-
-                for(int i = 0; i < prereq.Count; i++)
-                {
-                    if (string.IsNullOrEmpty(prereq[i])) continue;
-                    prereq[i] = prereq[i].Replace(letter, "");
-                }
+                buildingOrder += step;
+                steps.Remove(step);
+                stepReq.RemoveAll(l => l.prereq == step);
             }
 
             Console.WriteLine(buildingOrder);
-            return buildingOrder;
         }
 
-        public static void Task2(string buildingOrder)
-        { 
-            bool[] isDone = new bool[26];
-            int workers = 5;
-            int defaultStepTime = 60;
-
-
+        public static void Task2()
+        {
+            List<string> letter = new List<string>();
         }
     }
 }
