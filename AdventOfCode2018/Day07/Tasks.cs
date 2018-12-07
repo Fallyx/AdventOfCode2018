@@ -15,6 +15,7 @@ namespace AdventOfCode2018.Day07
         public static void Task1()
         {
             List<(string letter, string prereq)> stepReq = new List<(string, string)>();
+            List<string> letters;
             string buildingOrder = "";
 
             using (StreamReader reader = new StreamReader(inputPath))
@@ -27,14 +28,14 @@ namespace AdventOfCode2018.Day07
                 }
             }
 
-            List<string> steps = stepReq.Select(l => l.letter).Concat(stepReq.Select(p => p.prereq)).Distinct().OrderBy(l => l).ToList();
+            letters = stepReq.Select(l => l.letter).Concat(stepReq.Select(p => p.prereq)).Distinct().OrderBy(l => l).ToList();
 
-            while(steps.Count != 0)
+            while(letters.Count != 0)
             {
-                string step = steps.Where(l => !stepReq.Any(p => p.letter == l)).First();
+                string step = letters.Where(l => !stepReq.Any(p => p.letter == l)).First();
 
                 buildingOrder += step;
-                steps.Remove(step);
+                letters.Remove(step);
                 stepReq.RemoveAll(l => l.prereq == step);
             }
 
@@ -43,7 +44,54 @@ namespace AdventOfCode2018.Day07
 
         public static void Task2()
         {
-            List<string> letter = new List<string>();
+            List<(string letter, string prereq)> stepReq = new List<(string, string)>();
+            List<string> letters;
+            List<string> workingOn = new List<string>();
+            (string l, int t)[] workers = new (string, int)[5];
+            string buildingOrder = "";
+            int defaultWorktime = 60;
+
+            using (StreamReader reader = new StreamReader(inputPath))
+            {
+                string line;
+
+                while ((line = reader.ReadLine()) != null)
+                {
+                    stepReq.Add((line.ElementAt(36).ToString(), line.ElementAt(5).ToString()));
+                }
+            }
+
+            letters = stepReq.Select(l => l.letter).Concat(stepReq.Select(p => p.prereq)).Distinct().OrderBy(l => l).ToList();
+
+            int ticks = 0;
+
+            while(letters.Count != 0)
+            {
+                for(int i = 0; i < workers.Length; i++)
+                {
+                    workers[i].t--;
+                    if(workers[i].t <= 0 && !string.IsNullOrEmpty(workers[i].l))
+                    {
+                        buildingOrder += workers[i].l;
+                        letters.Remove(workers[i].l);
+                        stepReq.RemoveAll(l => l.prereq == workers[i].l);
+                        workers[i].l = "";
+                        workers[i].t = 0;
+                    }
+                    if(workers[i].t <= 0)
+                    {
+                        if (letters.Where(l => !stepReq.Any(p => p.letter == l) && !workingOn.Any(c => c == l)).Count() == 0) continue;
+                        string step = letters.Where(l => !stepReq.Any(p => p.letter == l) && !workingOn.Any(c => c == l)).First();
+                        workers[i].t = defaultWorktime + step[0] - 64;
+                        workers[i].l = step;
+                        workingOn.Add(step);
+                    }
+                }
+
+                ticks++;
+            }
+
+            Console.WriteLine(ticks - 2);
         }
     }
 }
