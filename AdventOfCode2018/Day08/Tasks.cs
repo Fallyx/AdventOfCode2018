@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
 
 namespace AdventOfCode2018.Day08
@@ -11,8 +8,9 @@ namespace AdventOfCode2018.Day08
     {
         const string inputPath = @"Day08/Input.txt";
         private static int sumMdate = 0;
+        private static int nodeVal = 0;
 
-        public static void Task1()
+        public static LicenseNode Task1()
         {
             string input = "";
             Stack<string> licenseFile = new Stack<string>();
@@ -29,12 +27,14 @@ namespace AdventOfCode2018.Day08
                 licenseFile.Push(nums[i]);
             }
 
-            LicenseNode root = CreateTreeT1(licenseFile);
+            LicenseNode root = CreateTree(licenseFile);
 
             Console.WriteLine(sumMdate);
+
+            return root;
         }
 
-        private static LicenseNode CreateTreeT1(Stack<string> lF)
+        private static LicenseNode CreateTree(Stack<string> lF)
         {
             LicenseNode node = new LicenseNode();
 
@@ -43,7 +43,7 @@ namespace AdventOfCode2018.Day08
 
             for(int i = 0; i < nrChilds; i++)
             {
-                node.Nodes.Add(CreateTreeT1(lF));
+                node.Nodes.Add(CreateTree(lF));
             }
 
             for(int i = 0; i < nrMdatas; i++)
@@ -51,6 +51,34 @@ namespace AdventOfCode2018.Day08
                 int mData = int.Parse(lF.Pop());
                 node.MetaData.Add(mData);
                 sumMdate += mData;
+            }
+
+            return node;
+        }
+
+        public static void Task2(LicenseNode root)
+        {
+            CalcNodeValue(root);
+
+            Console.WriteLine(nodeVal);
+        }
+
+        private static LicenseNode CalcNodeValue(LicenseNode node)
+        {
+            if(node.Nodes.Count == 0)
+            {
+                foreach(int mdata in node.MetaData) 
+                {
+                    nodeVal += mdata;
+                }
+            }
+            else
+            {
+                foreach(int childIdx in node.MetaData)
+                {
+                    if (node.Nodes.Count < childIdx) continue;
+                    CalcNodeValue(node.Nodes[childIdx - 1]);
+                }
             }
 
             return node;

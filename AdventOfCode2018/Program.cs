@@ -54,7 +54,11 @@ namespace AdventOfCode2018
             swDay.Stop();
             Console.WriteLine("Day07 elapsed time: {0}", swDay.Elapsed);
 
-            Day08.Tasks.Task1();
+            swDay.Restart();
+            Day08.LicenseNode root = Day08.Tasks.Task1();
+            Day08.Tasks.Task2(root);
+            swDay.Stop();
+            Console.WriteLine("Day08 elapsed time: {0}", swDay.Elapsed);
 
             swTot.Stop();
             Console.WriteLine("\nTotal elapsed time: {0}", swTot.Elapsed);
