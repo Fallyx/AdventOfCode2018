@@ -54,6 +54,8 @@ namespace AdventOfCode2018
             swDay.Stop();
             Console.WriteLine("Day07 elapsed time: {0}", swDay.Elapsed);
 
+            Day08.Tasks.Task1();
+
             swTot.Stop();
             Console.WriteLine("\nTotal elapsed time: {0}", swTot.Elapsed);
         }
