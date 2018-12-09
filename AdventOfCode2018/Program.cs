@@ -12,53 +12,77 @@ namespace AdventOfCode2018
 
             swTot.Start();
 
+            #region day 1
             swDay.Start();
             Day01.Tasks.Task1();
             Day01.Tasks.Task2();
             swDay.Stop();
             Console.WriteLine("Day01 elapsed time: {0}", swDay.Elapsed);
+            #endregion
 
+            #region day 2
             swDay.Restart();
             string[] lines = Day02.Tasks.Task1();
             Day02.Tasks.Task2(lines);
             swDay.Stop();
             Console.WriteLine("Day02 elapsed time: {0}", swDay.Elapsed);
+            #endregion
 
+            #region day 3
             swDay.Restart();
             Day03.Tasks.Task1();
             Day03.Tasks.Task2();
             swDay.Stop();
             Console.WriteLine("Day03 elapsed time: {0}", swDay.Elapsed);
+            #endregion
 
+            #region day 4
             swDay.Restart();
             Day04.Tasks.Task1();
             Day04.Tasks.Task2();
             swDay.Stop();
             Console.WriteLine("Day04 elapsed time: {0}", swDay.Elapsed);
+            #endregion
 
+            #region day 5
             swDay.Restart();
             Day05.Tasks.Task1();
             Day05.Tasks.Task2();
             swDay.Stop();
             Console.WriteLine("Day05 elapsed time: {0}", swDay.Elapsed);
+            #endregion
 
+            #region day 6
             swDay.Restart();
             Day06.Tasks.Task1();
             Day06.Tasks.Task2();
             swDay.Stop();
             Console.WriteLine("Day06 elapsed time: {0}", swDay.Elapsed);
+            #endregion
 
+            #region day 7
             swDay.Restart();
             Day07.Tasks.Task1();
             Day07.Tasks.Task2();
             swDay.Stop();
             Console.WriteLine("Day07 elapsed time: {0}", swDay.Elapsed);
+            #endregion
 
+            #region day 8
             swDay.Restart();
             Day08.LicenseNode root = Day08.Tasks.Task1();
             Day08.Tasks.Task2(root);
             swDay.Stop();
             Console.WriteLine("Day08 elapsed time: {0}", swDay.Elapsed);
+            #endregion
+
+            #region day 9
+            swDay.Restart();
+            Day09.Tasks.Task1();
+            Day09.Tasks.Task2();
+            swDay.Stop();
+            Console.WriteLine("Day09 elapsed time: {0}", swDay.Elapsed);
+            #endregion
 
             swTot.Stop();
             Console.WriteLine("\nTotal elapsed time: {0}", swTot.Elapsed);
