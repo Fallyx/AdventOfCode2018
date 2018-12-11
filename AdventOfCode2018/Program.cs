@@ -92,6 +92,14 @@ namespace AdventOfCode2018
             Console.WriteLine("Day 10 elapsed time: {0}", swDay.Elapsed);
             #endregion
 
+            #region day 11
+            swDay.Restart();
+            Day11.Tasks.Task1();
+            Day11.Tasks.Task2();
+            swDay.Stop();
+            Console.WriteLine("Day 10 elapsed time: {0}", swDay.Elapsed);
+            #endregion
+
             swTot.Stop();
             Console.WriteLine("\nTotal elapsed time: {0}", swTot.Elapsed);
         }

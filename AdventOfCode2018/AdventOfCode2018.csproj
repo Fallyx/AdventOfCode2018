@@ -54,6 +54,7 @@
     <Compile Include="Day08\Tasks.cs" />
     <Compile Include="Day09\Tasks.cs" />
     <Compile Include="Day10\Tasks.cs" />
+    <Compile Include="Day11\Tasks.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
