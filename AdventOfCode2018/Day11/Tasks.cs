@@ -16,14 +16,14 @@ namespace AdventOfCode2018.Day11
             Vector2 topLeft = new Vector2();
             int largestTotPower = 0;
 
-            int[,] powerLevels = new int[301, 301];
+            int[,] powerLevels = new int[300, 300];
 
-            for(int y = 1; y < 301; y++)
+            for(int y = 0; y < 300; y++)
             {
-                for (int x = 1; x < 301; x++)
+                for (int x = 0; x < 300; x++)
                 {
-                    int rackID = x + 10;
-                    int powerLvl = rackID * y;
+                    int rackID = x + 1 + 10;
+                    int powerLvl = rackID * (y+1);
                     powerLvl += input;
                     powerLvl *= rackID;
                     powerLvl = (powerLvl > 99) ? (powerLvl / 100) % 10 : 0;
@@ -31,9 +31,9 @@ namespace AdventOfCode2018.Day11
                 }
             }
 
-            for(int y = 1; y < 298; y++)
+            for(int y = 0; y < 297; y++)
             {
-                for (int x = 1; x < 298; x++)
+                for (int x = 0; x < 297; x++)
                 {
                     int totPower = 0;
                     for(int i = 0; i < 3; i++)
@@ -46,7 +46,7 @@ namespace AdventOfCode2018.Day11
 
                     if(totPower > largestTotPower)
                     {
-                        topLeft = new Vector2(x, y);
+                        topLeft = new Vector2(x + 1, y + 1);
                         largestTotPower = totPower;
                     }
                 }
@@ -60,14 +60,14 @@ namespace AdventOfCode2018.Day11
             Vector3 topLeft = new Vector3();
             int largestTotPower = 0;
 
-            int[,] powerLevels = new int[301, 301];
+            int[,] powerLevels = new int[300, 300];
 
-            for (int y = 1; y < 301; y++)
+            for (int y = 0; y < 300; y++)
             {
-                for (int x = 1; x < 301; x++)
+                for (int x = 0; x < 300; x++)
                 {
-                    int rackID = x + 10;
-                    int powerLvl = rackID * y;
+                    int rackID = x + 1 + 10;
+                    int powerLvl = rackID * (y + 1);
                     powerLvl += input;
                     powerLvl *= rackID;
                     powerLvl = (powerLvl > 99) ? (powerLvl / 100) % 10 : 0;
@@ -75,11 +75,11 @@ namespace AdventOfCode2018.Day11
                 }
             }
 
-            for (int size = 1; size < 301; size++)
+            for (int size = 1; size <= 300; size++)
             {
-                for (int y = 1; y <= 301 - size; y++)
+                for (int y = 0; y < 300 - size; y++)
                 {
-                    for (int x = 1; x <= 301 - size; x++)
+                    for (int x = 0; x < 300 - size; x++)
                     {
                         int totPower = 0;
                         for (int i = 0; i < size; i++)
@@ -92,7 +92,7 @@ namespace AdventOfCode2018.Day11
 
                         if (totPower > largestTotPower)
                         {
-                            topLeft = new Vector3(x, y, size);
+                            topLeft = new Vector3(x + 1, y + 1, size);
                             largestTotPower = totPower;
                         }
                     }
