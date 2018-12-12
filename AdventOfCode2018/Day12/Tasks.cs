@@ -50,7 +50,6 @@ namespace AdventOfCode2018.Day12
                     potState.Add(minIdx - j - 1, ".");
                 }
 
-
                 int maxPotIdx = potState.Last(p => p.Value == "#").Key;
                 int maxIdx = potState.Last().Key;
                 diff = Math.Abs(maxIdx - maxPotIdx);
@@ -117,40 +116,18 @@ namespace AdventOfCode2018.Day12
                 int minIdx = potState.First().Key;
                 int diff = Math.Abs(minIdx - minPotIdx);
 
-                if (diff == 2)
+                for (int j = 0; j + diff < 3; j++)
                 {
-                    potState.Add(minIdx - 1, ".");
-                }
-                else if (diff == 1)
-                {
-                    potState.Add(minIdx - 1, ".");
-                    potState.Add(minIdx - 2, ".");
-                }
-                else if (diff == 0)
-                {
-                    potState.Add(minIdx - 1, ".");
-                    potState.Add(minIdx - 2, ".");
-                    potState.Add(minIdx - 3, ".");
+                    potState.Add(minIdx - j - 1, ".");
                 }
 
                 int maxPotIdx = potState.Last(p => p.Value == "#").Key;
                 int maxIdx = potState.Last().Key;
                 diff = Math.Abs(maxIdx - maxPotIdx);
 
-                if (diff == 2)
+                for (int j = 0; j + diff < 3; j++)
                 {
-                    potState.Add(maxIdx + 1, ".");
-                }
-                else if (diff == 1)
-                {
-                    potState.Add(maxIdx + 1, ".");
-                    potState.Add(maxIdx + 2, ".");
-                }
-                else if (diff == 0)
-                {
-                    potState.Add(maxIdx + 1, ".");
-                    potState.Add(maxIdx + 2, ".");
-                    potState.Add(maxIdx + 3, ".");
+                    potState.Add(maxIdx + j + 1, ".");
                 }
 
                 var copy = new SortedDictionary<int, string>(potState);
