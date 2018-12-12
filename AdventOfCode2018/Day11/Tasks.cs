@@ -60,35 +60,31 @@ namespace AdventOfCode2018.Day11
             Vector3 topLeft = new Vector3();
             int largestTotPower = 0;
 
-            int[,] powerLevels = new int[300, 300];
+            int[,] powerLevels = new int[301, 301];
 
-            for (int y = 0; y < 300; y++)
+            for (int y = 1; y <= 300; y++)
             {
-                for (int x = 0; x < 300; x++)
+                for (int x = 1; x <= 300; x++)
                 {
-                    int rackID = x + 1 + 10;
-                    int powerLvl = rackID * (y + 1);
+                    int rackID = x + 10;
+                    int powerLvl = rackID * y;
                     powerLvl += input;
                     powerLvl *= rackID;
                     powerLvl = (powerLvl > 99) ? (powerLvl / 100) % 10 : 0;
                     powerLevels[x, y] = powerLvl - 5;
+                    powerLevels[x, y] += powerLevels[x - 1, y] + powerLevels[x, y - 1] - powerLevels[x - 1, y - 1];
                 }
             }
 
             for (int size = 1; size <= 300; size++)
             {
-                for (int y = 0; y < 300 - size; y++)
+                for (int y = 1; y <= 300 - size; y++)
                 {
-                    for (int x = 0; x < 300 - size; x++)
+                    for (int x = 1; x <= 300 - size; x++)
                     {
                         int totPower = 0;
-                        for (int i = 0; i < size; i++)
-                        {
-                            for (int j = 0; j < size; j++)
-                            {
-                                totPower += powerLevels[x + j, y + i];
-                            }
-                        }
+
+                        totPower += powerLevels[x, y] - powerLevels[x + size, y] - powerLevels[x, y + size] + powerLevels[x + size, y + size]; 
 
                         if (totPower > largestTotPower)
                         {
@@ -101,6 +97,7 @@ namespace AdventOfCode2018.Day11
             }
 
             Console.WriteLine(topLeft.X + "," + topLeft.Y + "," + topLeft.Z);
+            Console.WriteLine(largestTotPower);
         }
     }
 }

@@ -95,7 +95,7 @@ namespace AdventOfCode2018
             #region day 11
             swDay.Restart();
             Day11.Tasks.Task1();
-            //Day11.Tasks.Task2();
+            Day11.Tasks.Task2();
             swDay.Stop();
             Console.WriteLine("Day 11 elapsed time: {0}", swDay.Elapsed);
             #endregion
