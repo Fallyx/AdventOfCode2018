@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.IO;
 
 namespace AdventOfCode2018.Day12
@@ -78,7 +75,6 @@ namespace AdventOfCode2018.Day12
 
             Console.WriteLine(potState.Sum(p => p.Value == "#" ? p.Key : 0));
         }
-
 
         public static void Task2()
         {
@@ -172,8 +168,6 @@ namespace AdventOfCode2018.Day12
 
                 pat.gen++;
             }
-
-
 
             Console.WriteLine((50000000000 - pat.gen) * sumDiff + pat.sum);
         }

@@ -45,8 +45,7 @@ namespace AdventOfCode2018.Day10
                     var l = lights[i];
                     l.pos += l.vel;
                     lights[i] = l;
-                }
-                
+                }  
                
                 int newMinX = (int)lights.Min(l => l.pos.X);
                 int newMinY = (int)lights.Min(l => l.pos.Y);

@@ -68,7 +68,6 @@ namespace AdventOfCode2018.Day09
             }
 
             string[] splittedInput = input.Split(' ');
-
             uint[] playerScores = new uint[int.Parse(splittedInput[0])];
             int lastMarble = int.Parse(splittedInput[6]) * 100;
 

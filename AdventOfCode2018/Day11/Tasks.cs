@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Numerics;
 
 namespace AdventOfCode2018.Day11
@@ -97,7 +93,6 @@ namespace AdventOfCode2018.Day11
             }
 
             Console.WriteLine(topLeft.X + "," + topLeft.Y + "," + topLeft.Z);
-            Console.WriteLine(largestTotPower);
         }
     }
 }
