@@ -108,6 +108,13 @@ namespace AdventOfCode2018
             Console.WriteLine("Day 12 elapsed time: {0}", swDay.Elapsed);
             #endregion
 
+            #region day 13
+            swDay.Restart();
+            Day13.Tasks.Task1();
+            swDay.Stop();
+            Console.WriteLine("Day 13 elapsed time: {0}", swDay.Elapsed);
+            #endregion
+
             swTot.Stop();
             Console.WriteLine("\nTotal elapsed time: {0}", swTot.Elapsed);
         }
