@@ -45,6 +45,15 @@ namespace AdventOfCode2018.Day13
                         if (c == '^' || c == 'v' || c == '>' || c == '<')
                         {
                             cart = c.ToString();
+
+                            if (cart == "^" || cart == "v")
+                            {
+                                track = "|";
+                            }
+                            else if (cart == "<" || cart == ">")
+                            {
+                                track = "-";
+                            }
                         }
                         else
                         {
@@ -55,22 +64,6 @@ namespace AdventOfCode2018.Day13
                     }
 
                     counter++;
-                }
-            }
-
-            for (int y = 0; y < lineCount; y++)
-            {
-                for (int x = 0; x < lineLength; x++)
-                {
-                    if(mineMap[x, y].Track == "")
-                    {
-                        mineMap[x,y].Track = generateTrack(mineMap, x, y);
-
-                        if(mineMap[x,y].Track == "")
-                        {
-                            Console.Write("");
-                        }
-                    }
                 }
             }
 
@@ -182,7 +175,7 @@ namespace AdventOfCode2018.Day13
                             mineMap[x - 1, y].Moved = true;
                             mineMap[x, y].Cart = "";
                             mineMap[x, y].Direction = 0;
-                            mineMap[x - 1, y].Moved = false;
+                            mineMap[x, y].Moved = false;
                         }
                         else if (mineMap[x, y].Cart == ">")
                         {
@@ -262,6 +255,15 @@ namespace AdventOfCode2018.Day13
                         {
                             cart = c.ToString();
                             cartCounter++;
+
+                            if (cart == "^" || cart == "v")
+                            {
+                                track = "|";
+                            }
+                            else if (cart == "<" || cart == ">")
+                            {
+                                track = "-";
+                            }
                         }
                         else
                         {
@@ -275,23 +277,6 @@ namespace AdventOfCode2018.Day13
                 }
             }
 
-            for (int y = 0; y < lineCount; y++)
-            {
-                for (int x = 0; x < lineLength; x++)
-                {
-                    if (mineMap[x, y].Track == "")
-                    {
-                        mineMap[x, y].Track = generateTrack(mineMap, x, y);
-
-                        if (mineMap[x, y].Track == "")
-                        {
-                            Console.Write("");
-                        }
-                    }
-                }
-            }
-
-            int idx = 0;
             while (cartCounter > 1)
             {
                 for (int y = 0; y < lineCount; y++)
@@ -457,9 +442,6 @@ namespace AdventOfCode2018.Day13
                         mineMap[x, y].Moved = false;
                     }
                 }
-
-                Console.WriteLine($"it: {idx}, carts: {cartCounter}");
-                idx++;
             }
 
             for (int y = 0; y < lineCount; y++)
@@ -472,50 +454,6 @@ namespace AdventOfCode2018.Day13
                     }
                 }
             }  
-        }
-
-        private static string generateTrack(MineCart[,] mineMap, int x, int y)
-        {
-            // 0: x, y - 1
-            // 1: x, y + 1
-            // 2: x - 1, y
-            // 3: x + 1, y
-            string[] adjacentChars = new string[4];
-            adjacentChars[0] = (y == 0) ? " " : mineMap[x, y - 1].Track;
-            adjacentChars[1] = (y == 149) ? " " : mineMap[x, y + 1].Track;
-            adjacentChars[2] = (x == 0) ? " " : mineMap[x - 1, y].Track;
-            adjacentChars[3] = (x == 149) ? " " : mineMap[x + 1, y].Track;
-
-            if(adjacentChars[0] != " " && adjacentChars[1] != " " && adjacentChars[2] != " " && adjacentChars[3] != " ")
-            {
-                return "+";
-            }
-            else if(adjacentChars[0] == " " || adjacentChars[0] == "-" && adjacentChars[1] == " " || adjacentChars[1] == "-" && adjacentChars[2] != " " && adjacentChars[3] != " ")
-            {
-                return "-";
-            }
-            else if(adjacentChars[0] != " " && adjacentChars[1] != " " && adjacentChars[2] == " " || adjacentChars[2] == "|" && adjacentChars[3] == " " || adjacentChars[3] == "|")
-            {
-                return "|";
-            }
-            else if(adjacentChars[0] != " " && adjacentChars[1] == " " && adjacentChars[2] != " " && adjacentChars[3] == " ")
-            {
-                return "/";
-            }
-            else if(adjacentChars[0] != " " && adjacentChars[1] == " " && adjacentChars[2] == " " && adjacentChars[3] != " ")
-            {
-                return "\\";
-            }
-            else if(adjacentChars[0] == " " && adjacentChars[1] != " " && adjacentChars[2] != " " && adjacentChars[3] == " ")
-            {
-                return "\\";
-            }
-            else if(adjacentChars[0] == " " && adjacentChars[1] != " " && adjacentChars[2] == " " && adjacentChars[3] != " ")
-            {
-                return "/";
-            }
-
-            return "";
         }
 
         private static string GetTurn(string cart, int dir)
