@@ -23,14 +23,13 @@ namespace AdventOfCode2018.Day13
             string line;
             int lineCount = File.ReadLines(inputPath).Count();
             int lineLength = 0;
-            
 
             using (StreamReader reader = new StreamReader(inputPath))
             {
                 lineLength = reader.ReadLine().Length;
             }
 
-            (string track, string cart, int direction, bool moved)[,] mineMap = new (string, string, int, bool)[lineLength, lineCount];
+            MineCart[,] mineMap = new MineCart[lineLength, lineCount];
 
             using (StreamReader reader = new StreamReader(inputPath))
             {
@@ -40,8 +39,9 @@ namespace AdventOfCode2018.Day13
                     for (int i = 0; i < line.Length; i++)
                     {
                         char c = line[i];
-                        string track = "";
                         string cart = "";
+                        string track = "";
+
                         if (c == '^' || c == 'v' || c == '>' || c == '<')
                         {
                             cart = c.ToString();
@@ -50,7 +50,8 @@ namespace AdventOfCode2018.Day13
                         {
                             track = c.ToString();
                         }
-                        mineMap[i, counter] = (track, cart, 0, false);
+
+                        mineMap[i, counter] = new MineCart(track, cart, 0, false);
                     }
 
                     counter++;
@@ -61,11 +62,11 @@ namespace AdventOfCode2018.Day13
             {
                 for (int x = 0; x < lineLength; x++)
                 {
-                    if(mineMap[x, y].track == "")
+                    if(mineMap[x, y].Track == "")
                     {
-                        mineMap[x,y].track = generateTrack(mineMap, x, y);
+                        mineMap[x,y].Track = generateTrack(mineMap, x, y);
 
-                        if(mineMap[x,y].track == "")
+                        if(mineMap[x,y].Track == "")
                         {
                             Console.Write("");
                         }
@@ -83,138 +84,138 @@ namespace AdventOfCode2018.Day13
                 {
                     for(int x = 0; x < lineLength; x++)
                     {
-                        if (mineMap[x, y].moved) continue;
-                        if(mineMap[x,y].cart == "^")
+                        if (mineMap[x, y].Moved) continue;
+                        if(mineMap[x,y].Cart == "^")
                         {
-                            if (mineMap[x, y - 1].cart.Any(m => m == '^' || m == '>' || m == '<' || m == 'v'))
+                            if (mineMap[x, y - 1].Cart.Any(m => m == '^' || m == '>' || m == '<' || m == 'v'))
                             {
                                 crash = true;
                                 crashX = x;
                                 crashY = y - 1;
                                 break;
                             }
-                            else if (mineMap[x, y - 1].track == "/")
+                            else if (mineMap[x, y - 1].Track == "|")
                             {
-                                mineMap[x, y - 1].cart = ">";
+                                mineMap[x, y - 1].Cart = "^";
                             }
-                            else if (mineMap[x, y - 1].track == "\\")
+                            else if (mineMap[x, y - 1].Track == "/")
                             {
-                                mineMap[x, y - 1].cart = "<";
+                                mineMap[x, y - 1].Cart = ">";
                             }
-                            else if (mineMap[x, y - 1].track == "+")
+                            else if (mineMap[x, y - 1].Track == "\\")
                             {
-                                mineMap[x, y - 1].cart = GetTurn(mineMap[x, y].cart, mineMap[x, y].direction);
-                                mineMap[x, y].direction += 1;
+                                mineMap[x, y - 1].Cart = "<";
                             }
-                            else if(mineMap[x, y - 1].track == "|")
+                            else if (mineMap[x, y - 1].Track == "+")
                             {
-                                mineMap[x, y - 1].cart = "^";
+                                mineMap[x, y - 1].Cart = GetTurn(mineMap[x, y].Cart, mineMap[x, y].Direction);
+                                mineMap[x, y].Direction += 1;
                             }
 
-                            mineMap[x, y - 1].direction = mineMap[x, y].direction;
-                            mineMap[x, y - 1].moved = true;
-                            mineMap[x, y].cart = "";
-                            mineMap[x, y].direction = 0;
-                            mineMap[x, y].moved = false;
+                            mineMap[x, y - 1].Direction = mineMap[x, y].Direction;
+                            mineMap[x, y - 1].Moved = true;
+                            mineMap[x, y].Cart = "";
+                            mineMap[x, y].Direction = 0;
+                            mineMap[x, y].Moved = false;
                         }
-                        else if (mineMap[x, y].cart == "v")
+                        else if (mineMap[x, y].Cart == "v")
                         {
-                            if (mineMap[x, y + 1].cart.Any(m => m == '^' || m == '>' || m == '<' || m == 'v'))
+                            if (mineMap[x, y + 1].Cart.Any(m => m == '^' || m == '>' || m == '<' || m == 'v'))
                             {
                                 crash = true;
                                 crashX = x;
                                 crashY = y + 1;
                                 break;
                             }
-                            else if (mineMap[x, y + 1].track == "/")
+                            else if (mineMap[x, y + 1].Track == "/")
                             {
-                                mineMap[x, y + 1].cart = "<";
+                                mineMap[x, y + 1].Cart = "<";
                             }
-                            else if (mineMap[x, y + 1].track == "\\")
+                            else if (mineMap[x, y + 1].Track == "\\")
                             {
-                                mineMap[x, y + 1].cart = ">";
+                                mineMap[x, y + 1].Cart = ">";
                             }
-                            else if (mineMap[x, y + 1].track == "+")
+                            else if (mineMap[x, y + 1].Track == "+")
                             {
-                                mineMap[x, y + 1].cart = GetTurn(mineMap[x, y].cart, mineMap[x, y].direction);
-                                mineMap[x, y].direction += 1;
+                                mineMap[x, y + 1].Cart = GetTurn(mineMap[x, y].Cart, mineMap[x, y].Direction);
+                                mineMap[x, y].Direction += 1;
                             }
-                            else if (mineMap[x, y + 1].track == "|")
+                            else if (mineMap[x, y + 1].Track == "|")
                             {
-                                mineMap[x, y + 1].cart = "v";
+                                mineMap[x, y + 1].Cart = "v";
                             }
 
-                            mineMap[x, y + 1].direction = mineMap[x, y].direction;
-                            mineMap[x, y + 1].moved = true;
-                            mineMap[x, y].cart = "";
-                            mineMap[x, y].direction = 0;
-                            mineMap[x, y].moved = false;
+                            mineMap[x, y + 1].Direction = mineMap[x, y].Direction;
+                            mineMap[x, y + 1].Moved = true;
+                            mineMap[x, y].Cart = "";
+                            mineMap[x, y].Direction = 0;
+                            mineMap[x, y].Moved = false;
                         }
-                        else if (mineMap[x, y].cart == "<")
+                        else if (mineMap[x, y].Cart == "<")
                         {
-                            if (mineMap[x - 1, y].cart.Any(m => m == '^' || m == '>' || m == '<' || m == 'v'))
+                            if (mineMap[x - 1, y].Cart.Any(m => m == '^' || m == '>' || m == '<' || m == 'v'))
                             {
                                 crash = true;
                                 crashX = x - 1;
                                 crashY = y;
                                 break;
                             }
-                            else if (mineMap[x - 1, y].track == "/")
+                            else if (mineMap[x - 1, y].Track == "/")
                             {
-                                mineMap[x - 1, y].cart = "v";
+                                mineMap[x - 1, y].Cart = "v";
                             }
-                            else if (mineMap[x - 1, y].track == "\\")
+                            else if (mineMap[x - 1, y].Track == "\\")
                             {
-                                mineMap[x - 1, y].cart = "^";
+                                mineMap[x - 1, y].Cart = "^";
                             }
-                            else if (mineMap[x - 1, y].track == "+")
+                            else if (mineMap[x - 1, y].Track == "+")
                             {
-                                mineMap[x - 1, y].cart = GetTurn(mineMap[x, y].cart, mineMap[x, y].direction);
-                                mineMap[x, y].direction += 1;
+                                mineMap[x - 1, y].Cart = GetTurn(mineMap[x, y].Cart, mineMap[x, y].Direction);
+                                mineMap[x, y].Direction += 1;
                             }
-                            else if (mineMap[x - 1, y].track == "-")
+                            else if (mineMap[x - 1, y].Track == "-")
                             {
-                                mineMap[x - 1, y].cart = "<";
+                                mineMap[x - 1, y].Cart = "<";
                             }
 
-                            mineMap[x - 1, y].direction = mineMap[x, y].direction;
-                            mineMap[x - 1, y].moved = true;
-                            mineMap[x, y].cart = "";
-                            mineMap[x, y].direction = 0;
-                            mineMap[x - 1, y].moved = false;
+                            mineMap[x - 1, y].Direction = mineMap[x, y].Direction;
+                            mineMap[x - 1, y].Moved = true;
+                            mineMap[x, y].Cart = "";
+                            mineMap[x, y].Direction = 0;
+                            mineMap[x - 1, y].Moved = false;
                         }
-                        else if (mineMap[x, y].cart == ">")
+                        else if (mineMap[x, y].Cart == ">")
                         {
-                            if (mineMap[x + 1, y].cart.Any(m => m == '^' || m == '>' || m == '<' || m == 'v'))
+                            if (mineMap[x + 1, y].Cart.Any(m => m == '^' || m == '>' || m == '<' || m == 'v'))
                             {
                                 crash = true;
                                 crashX = x + 1;
                                 crashY = y;
                                 break;
                             }
-                            else if (mineMap[x + 1, y].track == "/")
+                            else if (mineMap[x + 1, y].Track == "/")
                             {
-                                mineMap[x + 1, y].cart = "^";
+                                mineMap[x + 1, y].Cart = "^";
                             }
-                            else if (mineMap[x + 1, y].track == "\\")
+                            else if (mineMap[x + 1, y].Track == "\\")
                             {
-                                mineMap[x + 1, y].cart = "v";
+                                mineMap[x + 1, y].Cart = "v";
                             }
-                            else if (mineMap[x + 1, y].track == "+")
+                            else if (mineMap[x + 1, y].Track == "+")
                             {
-                                mineMap[x + 1, y].cart = GetTurn(mineMap[x, y].cart, mineMap[x, y].direction);
-                                mineMap[x, y].direction += 1;
+                                mineMap[x + 1, y].Cart = GetTurn(mineMap[x, y].Cart, mineMap[x, y].Direction);
+                                mineMap[x, y].Direction += 1;
                             }
-                            else if (mineMap[x + 1, y].track == "-")
+                            else if (mineMap[x + 1, y].Track == "-")
                             {
-                                mineMap[x + 1, y].cart = ">";
+                                mineMap[x + 1, y].Cart = ">";
                             }
 
-                            mineMap[x + 1, y].direction = mineMap[x, y].direction;
-                            mineMap[x + 1, y].moved = true;
-                            mineMap[x, y].cart = "";
-                            mineMap[x, y].direction = 0;
-                            mineMap[x, y].moved = false;
+                            mineMap[x + 1, y].Direction = mineMap[x, y].Direction;
+                            mineMap[x + 1, y].Moved = true;
+                            mineMap[x, y].Cart = "";
+                            mineMap[x, y].Direction = 0;
+                            mineMap[x, y].Moved = false;
                         }
                     }
                     if (crash) break;
@@ -224,7 +225,7 @@ namespace AdventOfCode2018.Day13
                 {
                     for(int x = 0; x < lineLength; x++)
                     {
-                        mineMap[x, y].moved = false;
+                        mineMap[x, y].Moved = false;
                     }
                 }
             }
@@ -232,17 +233,258 @@ namespace AdventOfCode2018.Day13
             Console.WriteLine($"{crashX},{crashY}");
         }
 
-        private static string generateTrack((string track, string cart, int direction, bool moved)[,] mineMap, int x, int y)
+        public static void Task2()
+        {
+            string line;
+            int lineCount = File.ReadLines(inputPath).Count();
+            int lineLength = 0;
+            int cartCounter = 0;
+
+            using (StreamReader reader = new StreamReader(inputPath))
+            {
+                lineLength = reader.ReadLine().Length;
+            }
+
+            MineCart[,] mineMap = new MineCart[lineLength, lineCount];
+
+            using (StreamReader reader = new StreamReader(inputPath))
+            {
+                int counter = 0;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    for (int i = 0; i < line.Length; i++)
+                    {
+                        char c = line[i];
+                        string cart = "";
+                        string track = "";
+
+                        if (c == '^' || c == 'v' || c == '>' || c == '<')
+                        {
+                            cart = c.ToString();
+                            cartCounter++;
+                        }
+                        else
+                        {
+                            track = c.ToString();
+                        }
+
+                        mineMap[i, counter] = new MineCart(track, cart, 0, false);
+                    }
+
+                    counter++;
+                }
+            }
+
+            for (int y = 0; y < lineCount; y++)
+            {
+                for (int x = 0; x < lineLength; x++)
+                {
+                    if (mineMap[x, y].Track == "")
+                    {
+                        mineMap[x, y].Track = generateTrack(mineMap, x, y);
+
+                        if (mineMap[x, y].Track == "")
+                        {
+                            Console.Write("");
+                        }
+                    }
+                }
+            }
+
+            int idx = 0;
+            while (cartCounter > 1)
+            {
+                for (int y = 0; y < lineCount; y++)
+                {
+                    for (int x = 0; x < lineLength; x++)
+                    {
+                        if (mineMap[x, y].Moved) continue;
+                        if (mineMap[x, y].Cart == "^")
+                        {
+                            if (mineMap[x, y - 1].Cart != "")
+                            {
+                                mineMap[x, y - 1].Cart = "";
+                                mineMap[x, y - 1].Moved = false;
+                                mineMap[x, y - 1].Direction = 0;
+                                mineMap[x, y].Cart = "";
+                                mineMap[x, y].Moved = false;
+                                mineMap[x, y].Direction = 0;
+                                cartCounter -= 2;
+                                continue;
+                            }
+                            else if (mineMap[x, y - 1].Track == "|")
+                            {
+                                mineMap[x, y - 1].Cart = "^";
+                            }
+                            else if (mineMap[x, y - 1].Track == "/")
+                            {
+                                mineMap[x, y - 1].Cart = ">";
+                            }
+                            else if (mineMap[x, y - 1].Track == "\\")
+                            {
+                                mineMap[x, y - 1].Cart = "<";
+                            }
+                            else if (mineMap[x, y - 1].Track == "+")
+                            {
+                                mineMap[x, y - 1].Cart = GetTurn(mineMap[x, y].Cart, mineMap[x, y].Direction);
+                                mineMap[x, y].Direction += 1;
+                            }
+
+                            mineMap[x, y - 1].Direction = mineMap[x, y].Direction;
+                            mineMap[x, y - 1].Moved = true;
+                            mineMap[x, y].Cart = "";
+                            mineMap[x, y].Direction = 0;
+                            mineMap[x, y].Moved = false;
+                        }
+                        else if (mineMap[x, y].Cart == "v")
+                        {
+                            if (mineMap[x, y + 1].Cart != "")
+                            {
+                                mineMap[x, y + 1].Cart = "";
+                                mineMap[x, y + 1].Moved = false;
+                                mineMap[x, y + 1].Direction = 0;
+                                mineMap[x, y].Cart = "";
+                                mineMap[x, y].Moved = false;
+                                mineMap[x, y].Direction = 0;
+                                cartCounter -= 2;
+                                continue;
+                            }
+                            else if (mineMap[x, y + 1].Track == "/")
+                            {
+                                mineMap[x, y + 1].Cart = "<";
+                            }
+                            else if (mineMap[x, y + 1].Track == "\\")
+                            {
+                                mineMap[x, y + 1].Cart = ">";
+                            }
+                            else if (mineMap[x, y + 1].Track == "+")
+                            {
+                                mineMap[x, y + 1].Cart = GetTurn(mineMap[x, y].Cart, mineMap[x, y].Direction);
+                                mineMap[x, y].Direction += 1;
+                            }
+                            else if (mineMap[x, y + 1].Track == "|")
+                            {
+                                mineMap[x, y + 1].Cart = "v";
+                            }
+
+                            mineMap[x, y + 1].Direction = mineMap[x, y].Direction;
+                            mineMap[x, y + 1].Moved = true;
+                            mineMap[x, y].Cart = "";
+                            mineMap[x, y].Direction = 0;
+                            mineMap[x, y].Moved = false;
+                        }
+                        else if (mineMap[x, y].Cart == "<")
+                        {
+                            if (mineMap[x - 1, y].Cart != "")
+                            {
+                                mineMap[x - 1, y].Cart = "";
+                                mineMap[x - 1, y].Moved = false;
+                                mineMap[x - 1, y].Direction = 0;
+                                mineMap[x, y].Cart = "";
+                                mineMap[x, y].Moved = false;
+                                mineMap[x, y].Direction = 0;
+                                cartCounter -= 2;
+                                continue;
+                            }
+                            else if (mineMap[x - 1, y].Track == "/")
+                            {
+                                mineMap[x - 1, y].Cart = "v";
+                            }
+                            else if (mineMap[x - 1, y].Track == "\\")
+                            {
+                                mineMap[x - 1, y].Cart = "^";
+                            }
+                            else if (mineMap[x - 1, y].Track == "+")
+                            {
+                                mineMap[x - 1, y].Cart = GetTurn(mineMap[x, y].Cart, mineMap[x, y].Direction);
+                                mineMap[x, y].Direction += 1;
+                            }
+                            else if (mineMap[x - 1, y].Track == "-")
+                            {
+                                mineMap[x - 1, y].Cart = "<";
+                            }
+
+                            mineMap[x - 1, y].Direction = mineMap[x, y].Direction;
+                            mineMap[x - 1, y].Moved = true;
+                            mineMap[x, y].Cart = "";
+                            mineMap[x, y].Direction = 0;
+                            mineMap[x, y].Moved = false;
+                        }
+                        else if (mineMap[x, y].Cart == ">")
+                        {
+                            if (mineMap[x + 1, y].Cart != "")
+                            {
+                                mineMap[x + 1, y].Cart = "";
+                                mineMap[x + 1, y].Moved = false;
+                                mineMap[x + 1, y].Direction = 0;
+                                mineMap[x, y].Cart = "";
+                                mineMap[x, y].Moved = false;
+                                mineMap[x, y].Direction = 0;
+                                cartCounter -= 2;
+                                continue;
+                            }
+                            else if (mineMap[x + 1, y].Track == "/")
+                            {
+                                mineMap[x + 1, y].Cart = "^";
+                            }
+                            else if (mineMap[x + 1, y].Track == "\\")
+                            {
+                                mineMap[x + 1, y].Cart = "v";
+                            }
+                            else if (mineMap[x + 1, y].Track == "+")
+                            {
+                                mineMap[x + 1, y].Cart = GetTurn(mineMap[x, y].Cart, mineMap[x, y].Direction);
+                                mineMap[x, y].Direction += 1;
+                            }
+                            else if (mineMap[x + 1, y].Track == "-")
+                            {
+                                mineMap[x + 1, y].Cart = ">";
+                            }
+
+                            mineMap[x + 1, y].Direction = mineMap[x, y].Direction;
+                            mineMap[x + 1, y].Moved = true;
+                            mineMap[x, y].Cart = "";
+                            mineMap[x, y].Direction = 0;
+                            mineMap[x, y].Moved = false;
+                        }
+                    }
+                }
+
+                for (int y = 0; y < lineCount; y++)
+                {
+                    for (int x = 0; x < lineLength; x++)
+                    {
+                        mineMap[x, y].Moved = false;
+                    }
+                }
+
+                Console.WriteLine($"it: {idx}, carts: {cartCounter}");
+                idx++;
+            }
+
+            for (int y = 0; y < lineCount; y++)
+            {
+                for (int x = 0; x < lineLength; x++)
+                {
+                    if (mineMap[x, y].Cart != "")
+                    {
+                        Console.WriteLine($"{x},{y}");
+                    }
+                }
+            }  
+        }
+
+        private static string generateTrack(MineCart[,] mineMap, int x, int y)
         {
             // 0: x, y - 1
             // 1: x, y + 1
             // 2: x - 1, y
             // 3: x + 1, y
             string[] adjacentChars = new string[4];
-            adjacentChars[0] = (y == 0) ? " " : mineMap[x, y - 1].track;
-            adjacentChars[1] = (y == 149) ? " " : mineMap[x, y + 1].track;
-            adjacentChars[2] = (x == 0) ? " " : mineMap[x - 1, y].track;
-            adjacentChars[3] = (x == 149) ? " " : mineMap[x + 1, y].track;
+            adjacentChars[0] = (y == 0) ? " " : mineMap[x, y - 1].Track;
+            adjacentChars[1] = (y == 149) ? " " : mineMap[x, y + 1].Track;
+            adjacentChars[2] = (x == 0) ? " " : mineMap[x - 1, y].Track;
+            adjacentChars[3] = (x == 149) ? " " : mineMap[x + 1, y].Track;
 
             if(adjacentChars[0] != " " && adjacentChars[1] != " " && adjacentChars[2] != " " && adjacentChars[3] != " ")
             {
@@ -302,5 +544,26 @@ namespace AdventOfCode2018.Day13
             }
             return "";
         }
+    }
+
+    class MineCart
+    {
+        private string track;
+        private string cart;
+        private int direction;
+        private bool moved;
+
+        public MineCart(string t, string c, int d, bool m)
+        {
+            Track = t;
+            Cart = c;
+            Direction = d;
+            Moved = m;
+        }
+
+        public string Track { get => track; set => track = value; }
+        public string Cart { get => cart; set => cart = value; }
+        public int Direction { get => direction; set => direction = value; }
+        public bool Moved { get => moved; set => moved = value; }
     }
 }
