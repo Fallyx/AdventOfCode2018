@@ -12,11 +12,7 @@ namespace AdventOfCode2018.Day14
 
         public static void Task1()
         {
-            List<int> recipeScores = new List<int>
-            {
-                3,
-                7
-            };
+            List<int> recipeScores = new List<int> { 3, 7 };
 
             int idx1 = 0;
             int idx2 = 1;
@@ -52,17 +48,15 @@ namespace AdventOfCode2018.Day14
 
         public static void Task2()
         {
-            int match = 10442;
-            List<int> recipeScores = new List<int>
-            {
-                3,
-                7
-            };
+            int[] inputArr = new int[] { 5, 0, 3, 7, 6, 1 };
+            int idx = 0;
+            int inputIdx = 0;
+            bool found = false;
+
+            List<int> recipeScores = new List<int> { 3, 7 };
 
             int idx1 = 0;
             int idx2 = 1;
-            bool found = false;
-            int foundIdx = 0;
 
             while (!found)
             {
@@ -84,34 +78,26 @@ namespace AdventOfCode2018.Day14
                 idx1 = (idx1 + r1 + 1) % recipeScores.Count;
                 idx2 = (idx2 + r2 + 1) % recipeScores.Count;
 
-                int matchCounter = 0;
-
-                if(recipeScores.Count > 6)
+                while(idx + inputIdx < recipeScores.Count)
                 {
-                    for(int i = recipeScores.Count - 6; i < recipeScores.Count; i++)
+                    if(inputArr[inputIdx] == recipeScores[idx + inputIdx])
                     {
-                        int a = match / (int)(Math.Pow(10, 5 - matchCounter)) % 10;
-                        if (recipeScores[i] == a)
+                        if(inputIdx == inputArr.Length - 1)
                         {
-                            matchCounter++;
-                            if(matchCounter == 1)
-                            {
-                                foundIdx = i;
-                            }
-                            else if(matchCounter == 6)
-                            {
-                                found = true;
-                            }
+                            found = true;
+                            break;
                         }
-                        else
-                        {
-                            matchCounter = 0;
-                        }
+                        inputIdx++;
+                    }
+                    else
+                    {
+                        inputIdx = 0;
+                        idx++;
                     }
                 }
             }
 
-            Console.WriteLine(foundIdx);
+            Console.WriteLine(idx);
         }
     }
 }
