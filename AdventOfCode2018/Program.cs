@@ -17,7 +17,7 @@ namespace AdventOfCode2018
             Day01.Tasks.Task1();
             Day01.Tasks.Task2();
             swDay.Stop();
-            Console.WriteLine("Day 01 elapsed time: {0}", swDay.Elapsed);
+            Console.WriteLine($"Day 01 elapsed time: {swDay.Elapsed}");
             #endregion
 
             #region day 2
@@ -25,7 +25,7 @@ namespace AdventOfCode2018
             string[] lines = Day02.Tasks.Task1();
             Day02.Tasks.Task2(lines);
             swDay.Stop();
-            Console.WriteLine("Day 02 elapsed time: {0}", swDay.Elapsed);
+            Console.WriteLine($"Day 02 elapsed time: {swDay.Elapsed}");
             #endregion
 
             #region day 3
@@ -33,7 +33,7 @@ namespace AdventOfCode2018
             Day03.Tasks.Task1();
             Day03.Tasks.Task2();
             swDay.Stop();
-            Console.WriteLine("Day 03 elapsed time: {0}", swDay.Elapsed);
+            Console.WriteLine($"Day 03 elapsed time: {swDay.Elapsed}");
             #endregion
 
             #region day 4
@@ -41,7 +41,7 @@ namespace AdventOfCode2018
             Day04.Tasks.Task1();
             Day04.Tasks.Task2();
             swDay.Stop();
-            Console.WriteLine("Day 04 elapsed time: {0}", swDay.Elapsed);
+            Console.WriteLine($"Day 04 elapsed time: {swDay.Elapsed}");
             #endregion
 
             #region day 5
@@ -49,7 +49,7 @@ namespace AdventOfCode2018
             Day05.Tasks.Task1();
             Day05.Tasks.Task2();
             swDay.Stop();
-            Console.WriteLine("Day 05 elapsed time: {0}", swDay.Elapsed);
+            Console.WriteLine($"Day 05 elapsed time: {swDay.Elapsed}");
             #endregion
 
             #region day 6
@@ -57,7 +57,7 @@ namespace AdventOfCode2018
             Day06.Tasks.Task1();
             Day06.Tasks.Task2();
             swDay.Stop();
-            Console.WriteLine("Day 06 elapsed time: {0}", swDay.Elapsed);
+            Console.WriteLine($"Day 06 elapsed time: {swDay.Elapsed}");
             #endregion
 
             #region day 7
@@ -65,7 +65,7 @@ namespace AdventOfCode2018
             Day07.Tasks.Task1();
             Day07.Tasks.Task2();
             swDay.Stop();
-            Console.WriteLine("Day 07 elapsed time: {0}", swDay.Elapsed);
+            Console.WriteLine($"Day 07 elapsed time: {swDay.Elapsed}");
             #endregion
 
             #region day 8
@@ -73,7 +73,7 @@ namespace AdventOfCode2018
             Day08.LicenseNode root = Day08.Tasks.Task1();
             Day08.Tasks.Task2(root);
             swDay.Stop();
-            Console.WriteLine("Day 08 elapsed time: {0}", swDay.Elapsed);
+            Console.WriteLine($"Day 08 elapsed time: {swDay.Elapsed}");
             #endregion
 
             #region day 9
@@ -81,7 +81,7 @@ namespace AdventOfCode2018
             Day09.Tasks.Task1();
             Day09.Tasks.Task2();
             swDay.Stop();
-            Console.WriteLine("Day 09 elapsed time: {0}", swDay.Elapsed);
+            Console.WriteLine($"Day 09 elapsed time: {swDay.Elapsed}");
             #endregion
 
             #region day 10
@@ -89,7 +89,7 @@ namespace AdventOfCode2018
             Day10.Tasks.Task1();
             Day10.Tasks.Task2();
             swDay.Stop();
-            Console.WriteLine("Day 10 elapsed time: {0}", swDay.Elapsed);
+            Console.WriteLine($"Day 10 elapsed time: {swDay.Elapsed}");
             #endregion
 
             #region day 11
@@ -97,7 +97,7 @@ namespace AdventOfCode2018
             Day11.Tasks.Task1();
             Day11.Tasks.Task2();
             swDay.Stop();
-            Console.WriteLine("Day 11 elapsed time: {0}", swDay.Elapsed);
+            Console.WriteLine($"Day 11 elapsed time: {swDay.Elapsed}");
             #endregion
 
             #region day 12
@@ -105,7 +105,7 @@ namespace AdventOfCode2018
             Day12.Tasks.Task1();
             Day12.Tasks.Task2();
             swDay.Stop();
-            Console.WriteLine("Day 12 elapsed time: {0}", swDay.Elapsed);
+            Console.WriteLine($"Day 12 elapsed time: {swDay.Elapsed}");
             #endregion
 
             #region day 13
@@ -113,7 +113,7 @@ namespace AdventOfCode2018
             Day13.Tasks.Task1();
             Day13.Tasks.Task2();
             swDay.Stop();
-            Console.WriteLine("Day 13 elapsed time: {0}", swDay.Elapsed);
+            Console.WriteLine($"Day 13 elapsed time: {swDay.Elapsed}");
             #endregion
 
             #region day 14
@@ -121,11 +121,19 @@ namespace AdventOfCode2018
             Day14.Tasks.Task1();
             Day14.Tasks.Task2();
             swDay.Stop();
-            Console.WriteLine("Day 14 elapsed time: {0}", swDay.Elapsed);
+            Console.WriteLine($"Day 14 elapsed time: {swDay.Elapsed}");
+            #endregion
+
+            #region day 15
+            swDay.Restart();
+            Day15.Tasks.Task1();
+            swDay.Stop();
+            Console.WriteLine($"Day 15 elapsed time: {swDay.Elapsed}");
+
             #endregion
 
             swTot.Stop();
-            Console.WriteLine("\nTotal elapsed time: {0}", swTot.Elapsed);
+            Console.WriteLine($"\nTotal elapsed time: {swTot.Elapsed}");
         }
     }
 }
