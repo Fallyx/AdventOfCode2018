@@ -134,6 +134,7 @@ namespace AdventOfCode2018
 
             #region day 16
             Day16.Tasks.Task1();
+            Day16.Tasks.Task2();
             swDay.Restart();
             
             swDay.Stop();
