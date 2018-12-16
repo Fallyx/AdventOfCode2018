@@ -58,7 +58,6 @@
     <Compile Include="Day12\Tasks.cs" />
     <Compile Include="Day13\Tasks.cs" />
     <Compile Include="Day14\Tasks.cs" />
-    <Compile Include="Tmp\Tasks.cs" />
     <Compile Include="Day15\Tasks.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
