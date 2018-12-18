@@ -8,47 +8,43 @@ namespace AdventOfCode2018.Day01
     {
         const string inputPath = @"Day01/Input.txt";
 
-        public static void Task1()
-        {
-            int frequency = 0;
-            string line;
-
-            using (StreamReader sr = new StreamReader(inputPath))
-            {
-                while ((line = sr.ReadLine()) != null) frequency += int.Parse(line);
-            }
-
-            Console.WriteLine(frequency);
-        }
-
-        public static void Task2()
+        public static void Task1and2()
         {
             bool breakLoop = false;
-            string line;
             int frequency = 0;
 
+            List<int> freqsInFile = new List<int>();
             HashSet<int> freqs = new HashSet<int>();
+
+            using (StreamReader reader = new StreamReader(inputPath))
+            {
+                string line;
+
+                while ((line = reader.ReadLine()) != null)
+                {
+                    freqsInFile.Add(int.Parse(line));
+                    frequency += int.Parse(line);
+                    freqs.Add(frequency);
+                }
+
+                Console.WriteLine(frequency);
+            }
 
             while (!breakLoop)
             {
-                using (StreamReader reader = new StreamReader(inputPath))
+                for(int i = 0; i < freqsInFile.Count; i++)
                 {
-                    while ((line = reader.ReadLine()) != null)
+                    frequency += freqsInFile[i];
+
+                    if(freqs.Contains(frequency))
                     {
-                        frequency += int.Parse(line);
-
-                        if (freqs.Contains(frequency))
-                        {
-                            breakLoop = true;
-                            break;
-                        }
-
-                        freqs.Add(frequency);
+                        Console.WriteLine(frequency);
+                        return;
                     }
+
+                    freqs.Add(frequency);
                 }
             }
-
-            Console.WriteLine(frequency);
         }
     }
 }
