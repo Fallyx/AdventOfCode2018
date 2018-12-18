@@ -11,11 +11,18 @@ namespace AdventOfCode2018.Day17
     class Tasks
     {
         const string inputPath = @"Day17/Input.txt";
-        Vector2 waterSpring = new Vector2(500, 0);
 
-        public static void Task1()
+        Vector2 waterSpring = new Vector2(500, 0);
+        static int width = 1000;
+        static int height = 2000;
+        static char[,] reservoir;
+
+        static int minY = int.MaxValue;
+        static int maxY = 0;
+
+        public static void Task1and2()
         {
-            List<Vector2> clay = new List<Vector2>();
+            reservoir = new char[width, height];
 
             using (StreamReader reader = new StreamReader(inputPath))
             {
@@ -45,61 +52,142 @@ namespace AdventOfCode2018.Day17
                     {
                         for(int i = minMulti; i <= maxMulti; i++)
                         {
-                            clay.Add(new Vector2(single, i));
+                            reservoir[single, i] = '#';
+                        }
+
+                        if (minMulti < minY)
+                        {
+                            minY = minMulti;
+                        }
+                        if(maxMulti > maxY)
+                        {
+                            maxY = maxMulti;
                         }
                     }
                     else
                     {
                         for (int i = minMulti; i <= maxMulti; i++)
                         {
-                            clay.Add(new Vector2(i, single));
+                            reservoir[i, single] = '#';
+                        }
+
+                        if(single < minY)
+                        {
+                            minY = single;
+                        }
+                        if(single > maxY)
+                        {
+                            maxY = single;
                         }
                     }
                 }
             }
 
-            int miy = (int)clay.Min(i => i.Y);
-            int may = (int)clay.Max(i => i.Y);
+            reservoir[500, 0] = '+';
 
-            int mix = (int)clay.Min(i => i.X);
-            int max = (int)clay.Max(i => i.X);
+            WaterDown(500, 1);
 
-            // + 1 to include minBound + 2 for space left/right
-            // + 1 to include minBound + 1 to include water spring
-            int width = max - mix + 3;
-            int height = may - miy + 2;
+            int counterStill = 0;
+            int counterFall = 0;
 
-            string[,] reservoir = new string[width, height]; 
-
-            for(int y = 0; y < height; y++)
+            for(int y = minY; y <= maxY; y++)
             {
-                for(int x = 0; x < width; x++)
+                for(int x = 0; x < reservoir.GetLength(0); x++)
                 {
-                    if(clay.Any(c => c.X - mix + 1 == x && c.Y + 1 - miy == y))
+                    if(reservoir[x, y] == '|')
                     {
-                        reservoir[x, y] = "#";
+                        counterFall++;
                     }
-                    else
+                    else if(reservoir[x, y] == '~')
                     {
-                        reservoir[x, y] = ".";
+                        counterStill++;
                     }
                 }
             }
 
-            reservoir[500 - mix + 1, 0] = "+";
+            Console.WriteLine($"{counterStill} + {counterFall} = {counterStill + counterFall}");
+        }
 
-            for (int y = 0; y < width; y++)
+        private static bool BlockBlocked(int x, int y)
+        {
+            return reservoir[x, y] == '#' || reservoir[x, y] == '~';
+        }
+
+        private static void WaterDown(int x, int y)
+        {
+            reservoir[x, y] = '|';
+
+            while (reservoir[x, y + 1] != '#' && reservoir[x, y + 1] != '~')
             {
-                for (int x = 0; x < height; x++)
+                y++;
+                if (y > maxY)
                 {
-                    Console.Write(reservoir[x, y]);
+                    return;
+                }
+                reservoir[x, y] = '|';
+            } 
+
+            while (true)
+            {
+                bool waterDownLeft = false;
+                bool waterDownRight = false;
+                int leftX;
+                int rightX;
+
+                for(leftX = x; leftX >= 0;  leftX--)
+                {
+                    if(BlockBlocked(leftX, y + 1) == false)
+                    {
+                        waterDownLeft = true;
+                        break;
+                    }
+
+                    reservoir[leftX, y] = '|';
+
+                    if(BlockBlocked(leftX - 1, y))
+                    {
+                        break;
+                    }
                 }
 
-                Console.WriteLine();
+                for(rightX = x; rightX < reservoir.GetLength(0); rightX++)
+                {
+                    if (BlockBlocked(rightX, y + 1) == false)
+                    {
+                        waterDownRight = true;
+                        break;
+                    }
+
+                    reservoir[rightX, y] = '|';
+
+                    if (BlockBlocked(rightX + 1, y))
+                    {
+                        break;
+                    }
+                }
+
+                if(waterDownLeft)
+                {
+                    WaterDown(leftX, y);
+                }
+
+                if(waterDownRight)
+                {
+                    WaterDown(rightX, y);
+                }
+
+                if(waterDownLeft || waterDownRight)
+                {
+                    return;
+                }
+
+                for(int i = leftX; i <= rightX; i++)
+                {
+                    reservoir[i, y] = '~';
+                }
+
+                y--;
             }
-
-
-            Console.Write("");
         }
     }
 }

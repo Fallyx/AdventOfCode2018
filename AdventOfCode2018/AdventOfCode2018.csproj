@@ -61,6 +61,7 @@
     <Compile Include="Day15\Tasks.cs" />
     <Compile Include="Day16\Tasks.cs" />
     <Compile Include="Day17\Tasks.cs" />
+    <Compile Include="Day17\tmp.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
