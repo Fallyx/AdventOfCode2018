@@ -29,8 +29,7 @@ namespace AdventOfCode2018
 
             #region day 3
             swDay.Restart();
-            Day03.Tasks.Task1();
-            Day03.Tasks.Task2();
+            Day03.Tasks.Task1and2();
             swDay.Stop();
             Console.WriteLine($"Day 03 elapsed time: {swDay.Elapsed}");
             #endregion
