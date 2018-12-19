@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
 
 namespace AdventOfCode2018.Day09
@@ -10,11 +8,14 @@ namespace AdventOfCode2018.Day09
     class Tasks
     {
         const string inputPath = @"Day09/Input.txt";
+        private static LinkedList<int> marbles;
+        private static uint[] playerScores;
+        private static int  lastMarble;
 
-        public static void Task1()
+        public static void Task1and2()
         {
             string input;
-            LinkedList<int> marbles = new LinkedList<int>();
+
             using (StreamReader reader = new StreamReader(inputPath))
             {
                 input = reader.ReadToEnd();
@@ -22,61 +23,38 @@ namespace AdventOfCode2018.Day09
 
             string[] splittedInput = input.Split(' ');
 
-            int[] playerScores = new int[int.Parse(splittedInput[0])];
-            int lastMarble = int.Parse(splittedInput[6]);
+            marbles = new LinkedList<int>();
+            playerScores = new uint[int.Parse(splittedInput[0])];
+            lastMarble = int.Parse(splittedInput[6]);
 
-            marbles.AddFirst(0);
-            LinkedListNode<int> current = marbles.Find(0);
-            marbles.AddAfter(current, 1);
-            marbles.AddAfter(current, 2);
-            current = marbles.Find(2);
+            var current = SetupMarbles();
 
-            for(int i = 3; i < lastMarble + 1; i++)
-            {
-                if (i % 23 == 0)
-                {
-                    for(int j = 0;j < 7; j++)
-                    {
-                        current = current.Previous ?? marbles.Last;
-                    }
+            CalculatePlayerScore(current);
+            Console.WriteLine(playerScores.Max());
 
-                    playerScores[(i - 1) % playerScores.Length] += i + current.Value;
+            marbles = new LinkedList<int>();
+            playerScores = new uint[int.Parse(splittedInput[0])];
+            lastMarble = int.Parse(splittedInput[6]) * 100;
+            
+            current = SetupMarbles();
 
-                    var remove = current;
-                    current = current.Next ?? marbles.First;
-                    
-                    marbles.Remove(remove);
-                }
-                else
-                {
-                    current = current.Next ?? marbles.First;
-                    marbles.AddAfter(current, i);
-                    current = current.Next;
-                }
-            }
-
+            CalculatePlayerScore(current);
             Console.WriteLine(playerScores.Max());
         }
 
-        public static void Task2()
+        private static LinkedListNode<int> SetupMarbles()
         {
-            string input;
-            LinkedList<int> marbles = new LinkedList<int>();
-            using (StreamReader reader = new StreamReader(inputPath))
-            {
-                input = reader.ReadToEnd();
-            }
-
-            string[] splittedInput = input.Split(' ');
-            uint[] playerScores = new uint[int.Parse(splittedInput[0])];
-            int lastMarble = int.Parse(splittedInput[6]) * 100;
-
             marbles.AddFirst(0);
             LinkedListNode<int> current = marbles.Find(0);
             marbles.AddAfter(current, 1);
             marbles.AddAfter(current, 2);
-            current = marbles.Find(2);
+            current = current.Next;
 
+            return current;
+        }
+
+        private static void CalculatePlayerScore(LinkedListNode<int> current)
+        {
             for (int i = 3; i < lastMarble + 1; i++)
             {
                 if (i % 23 == 0)
@@ -86,7 +64,7 @@ namespace AdventOfCode2018.Day09
                         current = current.Previous ?? marbles.Last;
                     }
 
-                    playerScores[(i - 1) % playerScores.Length] +=(uint)(i + current.Value);
+                    playerScores[(i - 1) % playerScores.Length] += (uint)(i + current.Value);
 
                     var remove = current;
                     current = current.Next ?? marbles.First;
@@ -100,8 +78,6 @@ namespace AdventOfCode2018.Day09
                     current = current.Next;
                 }
             }
-
-            Console.WriteLine(playerScores.Max());
         }
     }
 }
