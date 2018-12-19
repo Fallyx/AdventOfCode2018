@@ -34,6 +34,13 @@ namespace AdventOfCode2018.Day08
             return root;
         }
 
+        public static void Task2(LicenseNode root)
+        {
+            CalcNodeValue(root);
+
+            Console.WriteLine(nodeVal);
+        }
+
         private static LicenseNode CreateTree(Stack<string> lF)
         {
             LicenseNode node = new LicenseNode();
@@ -54,13 +61,6 @@ namespace AdventOfCode2018.Day08
             }
 
             return node;
-        }
-
-        public static void Task2(LicenseNode root)
-        {
-            CalcNodeValue(root);
-
-            Console.WriteLine(nodeVal);
         }
 
         private static LicenseNode CalcNodeValue(LicenseNode node)

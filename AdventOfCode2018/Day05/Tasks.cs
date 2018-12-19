@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
 
 namespace AdventOfCode2018.Day05
@@ -11,7 +9,7 @@ namespace AdventOfCode2018.Day05
     {
         const string inputPath = @"Day05/Input.txt";
 
-        public static void Task1and2()
+        public static void Task1()
         {
             string input;
 
@@ -24,6 +22,19 @@ namespace AdventOfCode2018.Day05
             Stack<char> stackChar = RemainingPolymer(inputChar);
 
             Console.WriteLine(stackChar.Count);
+        }
+
+        public static void Task2()
+        {
+            string input;
+
+            using (StreamReader reader = new StreamReader(inputPath))
+            {
+                input = reader.ReadToEnd();
+            }
+
+            List<char> inputChar = input.ToList();
+            Stack<char> stackChar;
 
             int shortestPolymer = int.MaxValue;
 

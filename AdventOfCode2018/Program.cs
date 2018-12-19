@@ -44,7 +44,8 @@ namespace AdventOfCode2018
 
             #region day 5
             swDay.Restart();
-            Day05.Tasks.Task1and2();
+            Day05.Tasks.Task1();
+            Day05.Tasks.Task2();
             swDay.Stop();
             Console.WriteLine($"Day 05 elapsed time: {swDay.Elapsed}");
             #endregion
@@ -81,16 +82,15 @@ namespace AdventOfCode2018
 
             #region day 10
             swDay.Restart();
-            Day10.Tasks.Task1();
-            Day10.Tasks.Task2();
+            Day10.Tasks.Task1and2();
             swDay.Stop();
             Console.WriteLine($"Day 10 elapsed time: {swDay.Elapsed}");
             #endregion
 
             #region day 11
             swDay.Restart();
-            Day11.Tasks.Task1();
-            Day11.Tasks.Task2();
+            Day11.Tasks.Task1_();
+            Day11.Tasks.Task2_();
             swDay.Stop();
             Console.WriteLine($"Day 11 elapsed time: {swDay.Elapsed}");
             #endregion

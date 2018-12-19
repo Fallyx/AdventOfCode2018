@@ -6,61 +6,41 @@ namespace AdventOfCode2018.Day11
     class Tasks
     {
         const int input = 7989;
+        const int gridSize = 300;
 
-        public static void Task1()
+        public static void Task1_()
         {
-            Vector2 topLeft = new Vector2();
-            int largestTotPower = 0;
+            int[,] powerLevels = GeneratePowerLevels();
 
-            int[,] powerLevels = new int[300, 300];
-
-            for(int y = 0; y < 300; y++)
-            {
-                for (int x = 0; x < 300; x++)
-                {
-                    int rackID = x + 1 + 10;
-                    int powerLvl = rackID * (y+1);
-                    powerLvl += input;
-                    powerLvl *= rackID;
-                    powerLvl = (powerLvl > 99) ? (powerLvl / 100) % 10 : 0;
-                    powerLevels[x, y] = powerLvl - 5;
-                }
-            }
-
-            for(int y = 0; y < 297; y++)
-            {
-                for (int x = 0; x < 297; x++)
-                {
-                    int totPower = 0;
-                    for(int i = 0; i < 3; i++)
-                    {
-                        for(int j = 0; j < 3; j++)
-                        {
-                            totPower += powerLevels[x + j, y + i];
-                        }
-                    }
-
-                    if(totPower > largestTotPower)
-                    {
-                        topLeft = new Vector2(x + 1, y + 1);
-                        largestTotPower = totPower;
-                    }
-                }
-            }
-
-            Console.WriteLine(topLeft.X + "," + topLeft.Y);
+            var tot = LargestTotalPower(powerLevels, 3);
+            Console.WriteLine(tot.tl.X + "," + tot.tl.Y);
         }
 
-        public static void Task2()
+        public static void Task2_()
         {
+            int[,] powerLevels = GeneratePowerLevels();
             Vector3 topLeft = new Vector3();
             int largestTotPower = 0;
 
-            int[,] powerLevels = new int[301, 301];
-
-            for (int y = 1; y <= 300; y++)
+            for(int size = 1; size <= gridSize; size++)
             {
-                for (int x = 1; x <= 300; x++)
+                var tot = LargestTotalPower(powerLevels, size, largestTotPower);
+                if (tot.ltp > largestTotPower)
+                {
+                    topLeft = tot.tl;
+                    largestTotPower = tot.ltp;
+                }
+            }
+            
+            Console.WriteLine($"{topLeft.X},{topLeft.Y},{topLeft.Z}");
+        }
+
+        private static int[,] GeneratePowerLevels()
+        {
+            int[,] powerLevels = new int[gridSize + 1, gridSize + 1];
+            for(int y = 1; y <= gridSize; y++)
+            {
+                for(int x = 1; x <= gridSize; x++)
                 {
                     int rackID = x + 10;
                     int powerLvl = rackID * y;
@@ -72,27 +52,30 @@ namespace AdventOfCode2018.Day11
                 }
             }
 
-            for (int size = 1; size <= 300; size++)
+            return powerLevels;
+        }
+
+        private static (int ltp, Vector3 tl) LargestTotalPower(int[,] powerLevels, int squareSize, int largestTotPower = 0)
+        {
+            Vector3 topLeft = new Vector3();
+
+            for (int y = 1; y <= 300 - squareSize; y++)
             {
-                for (int y = 1; y <= 300 - size; y++)
+                for (int x = 1; x <= 300 - squareSize; x++)
                 {
-                    for (int x = 1; x <= 300 - size; x++)
+                    int totPower = 0;
+
+                    totPower += powerLevels[x, y] - powerLevels[x + squareSize, y] - powerLevels[x, y + squareSize] + powerLevels[x + squareSize, y + squareSize];
+
+                    if (totPower > largestTotPower)
                     {
-                        int totPower = 0;
-
-                        totPower += powerLevels[x, y] - powerLevels[x + size, y] - powerLevels[x, y + size] + powerLevels[x + size, y + size]; 
-
-                        if (totPower > largestTotPower)
-                        {
-                            topLeft = new Vector3(x + 1, y + 1, size);
-                            largestTotPower = totPower;
-                        }
+                        topLeft = new Vector3(x + 1, y + 1, squareSize);
+                        largestTotPower = totPower;
                     }
-
                 }
             }
 
-            Console.WriteLine(topLeft.X + "," + topLeft.Y + "," + topLeft.Z);
+            return (largestTotPower, topLeft);
         }
     }
 }
