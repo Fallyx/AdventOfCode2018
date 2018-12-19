@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AdventOfCode2018.Day14
 {
@@ -10,6 +7,7 @@ namespace AdventOfCode2018.Day14
     {
         const int input = 503761;
 
+        
         public static void Task1()
         {
             List<int> recipeScores = new List<int> { 3, 7 };
@@ -19,23 +17,9 @@ namespace AdventOfCode2018.Day14
 
             while (recipeScores.Count < input + 10)
             {
-                int r1 = recipeScores[idx1];
-                int r2 = recipeScores[idx2];
-
-                int rScore = r1 + r2;
-
-                if(rScore > 9)
-                {
-                    recipeScores.Add(rScore / 10);
-                    recipeScores.Add(rScore % 10);
-                }
-                else
-                {
-                    recipeScores.Add(rScore);
-                }
-
-                idx1 = (idx1 + r1 + 1) % recipeScores.Count;
-                idx2 = (idx2 + r2 + 1) % recipeScores.Count;
+                var i = CalculateRecipScore(recipeScores, idx1, idx2);
+                idx1 = i.Item1;
+                idx2 = i.Item2;
             }
 
             for (int i = 0; i < 10; i++)
@@ -45,6 +29,7 @@ namespace AdventOfCode2018.Day14
 
             Console.WriteLine("");
         }
+        
 
         public static void Task2()
         {
@@ -60,29 +45,15 @@ namespace AdventOfCode2018.Day14
 
             while (!found)
             {
-                int r1 = recipeScores[idx1];
-                int r2 = recipeScores[idx2];
+                var i = CalculateRecipScore(recipeScores, idx1, idx2);
+                idx1 = i.Item1;
+                idx2 = i.Item2;
 
-                int rScore = r1 + r2;
-
-                if (rScore > 9)
+                while (idx + inputIdx < recipeScores.Count)
                 {
-                    recipeScores.Add(rScore / 10);
-                    recipeScores.Add(rScore % 10);
-                }
-                else
-                {
-                    recipeScores.Add(rScore);
-                }
-
-                idx1 = (idx1 + r1 + 1) % recipeScores.Count;
-                idx2 = (idx2 + r2 + 1) % recipeScores.Count;
-
-                while(idx + inputIdx < recipeScores.Count)
-                {
-                    if(inputArr[inputIdx] == recipeScores[idx + inputIdx])
+                    if (inputArr[inputIdx] == recipeScores[idx + inputIdx])
                     {
-                        if(inputIdx == inputArr.Length - 1)
+                        if (inputIdx == inputArr.Length - 1)
                         {
                             found = true;
                             break;
@@ -98,6 +69,29 @@ namespace AdventOfCode2018.Day14
             }
 
             Console.WriteLine(idx);
+        }        
+
+        private static (int, int) CalculateRecipScore(List<int> recipeScores, int idx1, int idx2)
+        {
+            int r1 = recipeScores[idx1];
+            int r2 = recipeScores[idx2];
+
+            int rScore = r1 + r2;
+
+            if (rScore > 9)
+            {
+                recipeScores.Add(rScore / 10);
+                recipeScores.Add(rScore % 10);
+            }
+            else
+            {
+                recipeScores.Add(rScore);
+            }
+
+            idx1 = (idx1 + r1 + 1) % recipeScores.Count;
+            idx2 = (idx2 + r2 + 1) % recipeScores.Count;
+
+            return (idx1, idx2);
         }
     }
 }

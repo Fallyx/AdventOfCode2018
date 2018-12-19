@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
 using System.Numerics;
 
@@ -17,6 +15,45 @@ namespace AdventOfCode2018.Day15
             List<Unit> units = new List<Unit>();
             BattleMap bMap = new BattleMap();
 
+            Setup(units, bMap);
+
+            var ru = SimulateBattle(units, bMap);
+            ru.rounds--;
+
+            Console.WriteLine(ru.rounds * ru.units.Sum(u => u.Hp));
+        }
+
+        public static void Task2()
+        {
+            List<Unit> units = new List<Unit>();
+            int atkDmg = 1;
+            int rnds = 0;
+            int hpLeft = 0;
+            int nrOfElves = 0;
+
+            while(true)
+            {
+                units.Clear();
+                BattleMap bMap = new BattleMap();
+
+                nrOfElves = Setup(units, bMap, atkDmg);
+
+                var ru = SimulateBattle(units, bMap, true);
+                atkDmg++;
+
+                if (ru.units.Count(f => f.Type == Unit.UnitType.Elf) == nrOfElves && !ru.units.Any(f => f.Type == Unit.UnitType.Goblin))
+                {
+                    rnds = ru.rounds - 1;
+                    hpLeft = ru.units.Sum(u => u.Hp);
+                    break;
+                }
+            }
+
+            Console.WriteLine(rnds * hpLeft);
+        }
+
+        private static int Setup(List<Unit> units, BattleMap bMap, int atkDmg = 0)
+        {
             using (StreamReader reader = new StreamReader(inputPath))
             {
                 string line;
@@ -29,14 +66,14 @@ namespace AdventOfCode2018.Day15
 
                         if (c == 'E')
                         {
-                            units.Add(new Unit(3, new Vector2(i, counter), Unit.UnitType.Elf));
+                            units.Add(new Unit(3 + atkDmg, new Vector2(i, counter), Unit.UnitType.Elf));
                         }
                         else if (c == 'G')
                         {
                             units.Add(new Unit(3, new Vector2(i, counter), Unit.UnitType.Goblin));
                         }
-                        
-                        if(c != '#')
+
+                        if (c != '#')
                         {
                             bMap.AddNode(new Vector2(i, counter));
                             bMap.AddEdge(new Vector2(i, counter), new Vector2(i, counter - 1));
@@ -47,9 +84,14 @@ namespace AdventOfCode2018.Day15
                 }
             }
 
+            return units.Count(f => f.Type == Unit.UnitType.Elf);
+        }
+
+        private static (int rounds, List<Unit> units) SimulateBattle(List<Unit> units, BattleMap bMap, bool stopOnElfDeath = false)
+        {
             int rounds = 0;
 
-            while(units.Any(f => f.Type == Unit.UnitType.Elf) && units.Any(f => f.Type == Unit.UnitType.Goblin))
+            while (units.Any(f => f.Type == Unit.UnitType.Elf) && units.Any(f => f.Type == Unit.UnitType.Goblin))
             {
                 for (int i = 0; i < units.Count; i++)
                 {
@@ -76,109 +118,18 @@ namespace AdventOfCode2018.Day15
                     }
                 }
 
+                if (stopOnElfDeath && units.Any(u => u.Type == Unit.UnitType.Elf && u.IsDead))
+                {
+                    break;
+                }
+
                 units.RemoveAll(u => u.IsDead);
 
                 units = units.OrderBy(y => y.Pos.Y).ThenBy(x => x.Pos.X).ToList();
                 rounds++;
             }
 
-            rounds--;
-            Console.WriteLine(rounds * units.Sum(u => u.Hp));
-        }
-
-        public static void Task2()
-        {
-            List<Unit> units = new List<Unit>();
-            
-            int atkDmg = 1;
-            int rnds = 0;
-            int hpLeft = 0;
-            int nrOfElves = 0;
-
-            while (true)
-            {
-                units.Clear();
-                BattleMap bMap = new BattleMap();
-
-                using (StreamReader reader = new StreamReader(inputPath))
-                {
-                    string line;
-                    int counter = 0;
-                    while ((line = reader.ReadLine()) != null)
-                    {
-                        for (int i = 0; i < line.Length; i++)
-                        {
-                            char c = line[i];
-
-                            if (c == 'E')
-                            {
-                                units.Add(new Unit(3 + atkDmg, new Vector2(i, counter), Unit.UnitType.Elf));
-                            }
-                            else if (c == 'G')
-                            {
-                                units.Add(new Unit(3, new Vector2(i, counter), Unit.UnitType.Goblin));
-                            }
-
-                            if (c != '#')
-                            {
-                                bMap.AddNode(new Vector2(i, counter));
-                                bMap.AddEdge(new Vector2(i, counter), new Vector2(i, counter - 1));
-                                bMap.AddEdge(new Vector2(i, counter), new Vector2(i - 1, counter));
-                            }
-                        }
-                        counter++;
-                    }
-
-                    nrOfElves = units.Count(f => f.Type == Unit.UnitType.Elf);
-                }
-
-                int rounds = 0;
-
-                while (units.Any(f => f.Type == Unit.UnitType.Elf) && units.Any(f => f.Type == Unit.UnitType.Goblin))
-                {
-                    for (int i = 0; i < units.Count; i++)
-                    {
-                        if (units[i].IsDead) continue;
-
-                        int x = (int)units[i].Pos.X;
-                        int y = (int)units[i].Pos.Y;
-
-                        Unit.UnitType enemy = units[i].Type == Unit.UnitType.Elf ? Unit.UnitType.Goblin : Unit.UnitType.Elf;
-
-                        List<Unit> enemies = EnemiesAround(units, units[i], enemy);
-                        if (enemies.Count == 0)
-                        {
-                            units[i].Pos = bMap.NextStep(units[i], units);
-
-                            enemies = EnemiesAround(units, units[i], enemy);
-                        }
-
-                        if (enemies.Count > 0)
-                        {
-                            Unit lowestEnemy = enemies.OrderBy(h => h.Hp).ThenBy(py => py.Pos.Y).ThenBy(px => px.Pos.X).First();
-                            if (lowestEnemy.Hp - units[i].Dmg > 0) lowestEnemy.Hp -= units[i].Dmg;
-                            else lowestEnemy.IsDead = true;
-                        }
-                    }
-
-                    units.RemoveAll(u => u.IsDead);
-
-                    units = units.OrderBy(y => y.Pos.Y).ThenBy(x => x.Pos.X).ToList();
-                    rounds++;
-                }
-
-                rounds--;
-                atkDmg++;
-
-                if (units.Count(f => f.Type == Unit.UnitType.Elf) == nrOfElves && !units.Any(f => f.Type == Unit.UnitType.Goblin))
-                {
-                    rnds = rounds;
-                    hpLeft = units.Sum(u => u.Hp);
-                    break;
-                }
-            }
-
-            Console.WriteLine($"{rnds} * {hpLeft} = {rnds * hpLeft}");
+            return (rounds, units);
         }
 
         private static List<Unit> EnemiesAround(List<Unit> units, Unit currentUnit, Unit.UnitType enemyType)

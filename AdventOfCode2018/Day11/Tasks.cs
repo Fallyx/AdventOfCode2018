@@ -8,7 +8,7 @@ namespace AdventOfCode2018.Day11
         const int input = 7989;
         const int gridSize = 300;
 
-        public static void Task1_()
+        public static void Task1()
         {
             int[,] powerLevels = GeneratePowerLevels();
 
@@ -16,7 +16,7 @@ namespace AdventOfCode2018.Day11
             Console.WriteLine(tot.tl.X + "," + tot.tl.Y);
         }
 
-        public static void Task2_()
+        public static void Task2()
         {
             int[,] powerLevels = GeneratePowerLevels();
             Vector3 topLeft = new Vector3();
