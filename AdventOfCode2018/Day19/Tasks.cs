@@ -8,7 +8,6 @@ namespace AdventOfCode2018.Day19
     class Tasks
     {
         const string inputPath = @"Day19/Input.txt";
-        internal enum Codes { addr, addi, mulr, muli, banr, bani, borr, bori, setr, seti, gtir, gtri, gtrr, eqir, eqri, eqrr, none }
 
         public static void Task1()
         {
@@ -37,7 +36,7 @@ namespace AdventOfCode2018.Day19
                             int.Parse(instr[3])
                         };
 
-                        instructions.Add(new OpCode(GetCode(instr[0]), nums));
+                        instructions.Add(new OpCode(OpCode.GetCode(instr[0]), nums));
                     }
                 }
             }
@@ -85,7 +84,7 @@ namespace AdventOfCode2018.Day19
                             int.Parse(instr[3])
                         };
 
-                        instructions.Add(new OpCode(GetCode(instr[0]), nums));
+                        instructions.Add(new OpCode(OpCode.GetCode(instr[0]), nums));
                     }
                 }
             }
@@ -109,27 +108,6 @@ namespace AdventOfCode2018.Day19
             int r0 = CalculateRegister0(primes);
 
             Console.WriteLine(r0);
-        }
-
-        private static Codes GetCode(string code)
-        {
-            if (code == "addr") return Codes.addr;
-            else if (code == "addi") return Codes.addi;
-            else if (code == "mulr") return Codes.mulr;
-            else if (code == "muli") return Codes.muli;
-            else if (code == "banr") return Codes.banr;
-            else if (code == "bani") return Codes.bani;
-            else if (code == "borr") return Codes.borr;
-            else if (code == "bori") return Codes.bori;
-            else if (code == "setr") return Codes.setr;
-            else if (code == "seti") return Codes.seti;
-            else if (code == "gtir") return Codes.gtir;
-            else if (code == "gtri") return Codes.gtri;
-            else if (code == "gtrr") return Codes.gtrr;
-            else if (code == "eqir") return Codes.eqir;
-            else if (code == "eqri") return Codes.eqri;
-            else if (code == "eqrr") return Codes.eqrr;
-            else return Codes.none;
         }
 
         private static int CalculateRegister0(List<int> primes)
@@ -187,36 +165,38 @@ namespace AdventOfCode2018.Day19
 
     internal class OpCode
     {
-        Tasks.Codes code;
+        internal enum Codes { addr, addi, mulr, muli, banr, bani, borr, bori, setr, seti, gtir, gtri, gtrr, eqir, eqri, eqrr, none }
+
+        Codes code;
         int[] instruction;
 
-        public OpCode(Tasks.Codes code, int[] instruction)
+        public OpCode(Codes code, int[] instruction)
         {
             Code = code;
             Instruction = instruction;
         }
 
         public int[] Instruction { get => instruction; set => instruction = value; }
-        internal Tasks.Codes Code { get => code; set => code = value; }
+        internal Codes Code { get => code; set => code = value; }
 
         internal void Exec(int[] register)
         {
-            if (Code == Tasks.Codes.addr) Addr(register);
-            else if (Code == Tasks.Codes.addi) Addi(register);
-            else if (Code == Tasks.Codes.mulr) Mulr(register);
-            else if (Code == Tasks.Codes.muli) Muli(register);
-            else if (Code == Tasks.Codes.banr) Banr(register);
-            else if (Code == Tasks.Codes.bani) Bani(register);
-            else if (Code == Tasks.Codes.borr) Borr(register);
-            else if (Code == Tasks.Codes.bori) Bori(register);
-            else if (Code == Tasks.Codes.setr) Setr(register);
-            else if (Code == Tasks.Codes.seti) Seti(register);
-            else if (Code == Tasks.Codes.gtir) Gtir(register);
-            else if (Code == Tasks.Codes.gtri) Gtri(register);
-            else if (Code == Tasks.Codes.gtrr) Gtrr(register);
-            else if (Code == Tasks.Codes.eqir) Eqir(register);
-            else if (Code == Tasks.Codes.eqri) Eqri(register);
-            else if (Code == Tasks.Codes.eqrr) Eqrr(register);
+            if (Code == Codes.addr) Addr(register);
+            else if (Code == Codes.addi) Addi(register);
+            else if (Code == Codes.mulr) Mulr(register);
+            else if (Code == Codes.muli) Muli(register);
+            else if (Code == Codes.banr) Banr(register);
+            else if (Code == Codes.bani) Bani(register);
+            else if (Code == Codes.borr) Borr(register);
+            else if (Code == Codes.bori) Bori(register);
+            else if (Code == Codes.setr) Setr(register);
+            else if (Code == Codes.seti) Seti(register);
+            else if (Code == Codes.gtir) Gtir(register);
+            else if (Code == Codes.gtri) Gtri(register);
+            else if (Code == Codes.gtrr) Gtrr(register);
+            else if (Code == Codes.eqir) Eqir(register);
+            else if (Code == Codes.eqri) Eqri(register);
+            else if (Code == Codes.eqrr) Eqrr(register);
         }
 
         private void Addr(int[] register)
@@ -359,6 +339,27 @@ namespace AdventOfCode2018.Day19
             int outr = Instruction[2];
 
             register[outr] = (register[r1] == register[r2]) ? 1 : 0;
+        }
+
+        public static Codes GetCode(string code)
+        {
+            if (code == "addr") return Codes.addr;
+            else if (code == "addi") return Codes.addi;
+            else if (code == "mulr") return Codes.mulr;
+            else if (code == "muli") return Codes.muli;
+            else if (code == "banr") return Codes.banr;
+            else if (code == "bani") return Codes.bani;
+            else if (code == "borr") return Codes.borr;
+            else if (code == "bori") return Codes.bori;
+            else if (code == "setr") return Codes.setr;
+            else if (code == "seti") return Codes.seti;
+            else if (code == "gtir") return Codes.gtir;
+            else if (code == "gtri") return Codes.gtri;
+            else if (code == "gtrr") return Codes.gtrr;
+            else if (code == "eqir") return Codes.eqir;
+            else if (code == "eqri") return Codes.eqri;
+            else if (code == "eqrr") return Codes.eqrr;
+            else return Codes.none;
         }
     }
 }
