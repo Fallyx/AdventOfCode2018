@@ -1,176 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.IO;
-using AdventOfCode2018.Helper;
 
-namespace AdventOfCode2018.Day19
+namespace AdventOfCode2018.Helper
 {
-    class Tasks
+    public class OpCode
     {
-        const string inputPath = @"Day19/Input.txt";
-
-        public static void Task1()
-        {
-            int ipIdx = 0;
-            int instrPt = 0;
-            int[] registers = new int[6];
-            List<OpCode> instructions = new List<OpCode>();
-
-            using (StreamReader reader = new StreamReader(inputPath))
-            {
-                string line;
-
-                while ((line = reader.ReadLine()) != null)
-                {
-                    if (line[0] == '#')
-                    {
-                        ipIdx = int.Parse(line[4].ToString());
-                    }
-                    else
-                    {
-                        string[] instr = line.Split(' ');
-                        int[] nums = new int[]
-                        {
-                            int.Parse(instr[1]),
-                            int.Parse(instr[2]),
-                            int.Parse(instr[3])
-                        };
-
-                        instructions.Add(new OpCode(OpCode.GetCode(instr[0]), nums));
-                    }
-                }
-            }
-
-            while (instrPt < instructions.Count)
-            {
-                registers[ipIdx] = instrPt;
-
-                instructions[instrPt].Exec(registers);
-
-                instrPt = registers[ipIdx];
-                instrPt++;
-            }
-
-            Console.WriteLine(registers[0]);
-        }
-
-        public static void Task2()
-        {
-            int ipIdx = 0;
-            int instrPt = 0;
-            int[] registers = new int[6];
-            registers[0] = 1;
-            List<OpCode> instructions = new List<OpCode>();
-            List<int> register4 = new List<int>();
-            const int PATTERN_TRESHOLD = 200;
-
-            using (StreamReader reader = new StreamReader(inputPath))
-            {
-                string line;
-
-                while ((line = reader.ReadLine()) != null)
-                {
-                    if (line[0] == '#')
-                    {
-                        ipIdx = int.Parse(line[4].ToString());
-                    }
-                    else
-                    {
-                        string[] instr = line.Split(' ');
-                        int[] nums = new int[]
-                        {
-                            int.Parse(instr[1]),
-                            int.Parse(instr[2]),
-                            int.Parse(instr[3])
-                        };
-
-                        instructions.Add(new OpCode(OpCode.GetCode(instr[0]), nums));
-                    }
-                }
-            }
-
-            for (int i = 0; i < PATTERN_TRESHOLD; i++)
-            {
-                registers[ipIdx] = instrPt;
-
-                instructions[instrPt].Exec(registers);
-                register4.Add(registers[4]);
-
-                instrPt = registers[ipIdx];
-                instrPt++;
-            }
-
-            var r4s = register4.GroupBy(x => x).Select(group => new { Number = group.Key, Count = group.Count() });
-            var r4 = r4s.Aggregate((l, r) => l.Count > r.Count ? l : r).Number;
-
-            var primes = FindFactors(r4);
-
-            int r0 = CalculateRegister0(primes);
-
-            Console.WriteLine(r0);
-        }
-
-        private static int CalculateRegister0(List<int> primes)
-        {
-            int r0 = 1;
-
-            foreach(int p in primes)
-            {
-                r0 += p;
-            }
-
-            for (int i = 0; i < primes.Count - 1; i++)
-            {
-                int m = primes[i];
-                for(int x = 1; x < primes.Count - i; x++)
-                {
-                    m *= primes[x];
-                }
-
-                r0 += m;
-            }
-
-            return r0;
-        }
-
-        private static List<int> FindFactors(int num)
-        {
-            List<int> result = new List<int>();
-
-            while (num % 2 == 0)
-            {
-                result.Add(2);
-                num /= 2;
-            }
-
-            int factor = 3;
-            while (factor * factor <= num)
-            {
-                if (num % factor == 0)
-                {
-                    result.Add(factor);
-                    num /= factor;
-                }
-                else
-                {
-                    factor += 2;
-                }
-            }
-
-            if (num > 1) result.Add(num);
-
-            return result;
-        }
-    }
-
-    /*
-    internal class OpCode
-    {
-        internal enum Codes { addr, addi, mulr, muli, banr, bani, borr, bori, setr, seti, gtir, gtri, gtrr, eqir, eqri, eqrr, none }
+        public enum Codes { addr, addi, mulr, muli, banr, bani, borr, bori, setr, seti, gtir, gtri, gtrr, eqir, eqri, eqrr, none }
 
         Codes code;
         int[] instruction;
+        Dictionary<int, Codes> opCodes;
 
         public OpCode(Codes code, int[] instruction)
         {
@@ -178,8 +17,19 @@ namespace AdventOfCode2018.Day19
             Instruction = instruction;
         }
 
+        public OpCode(Dictionary<int, List<Codes>> opCodes)
+        {
+            OpCodes = new Dictionary<int, Codes>();
+
+            foreach (var op in opCodes)
+            {
+                OpCodes.Add(op.Key, op.Value[0]);
+            }
+        }
+
         public int[] Instruction { get => instruction; set => instruction = value; }
         internal Codes Code { get => code; set => code = value; }
+        public Dictionary<int, Codes> OpCodes { get => opCodes; set => opCodes = value; }
 
         internal void Exec(int[] register)
         {
@@ -199,6 +49,28 @@ namespace AdventOfCode2018.Day19
             else if (Code == Codes.eqir) Eqir(register);
             else if (Code == Codes.eqri) Eqri(register);
             else if (Code == Codes.eqrr) Eqrr(register);
+        }
+
+        internal void Exec(int[] register, int[] operation)
+        {
+            Codes c = OpCodes[operation[0]];
+
+            if (c == Codes.addr) Addr(register, operation);
+            else if (c == Codes.addi) Addi(register, operation);
+            else if (c == Codes.mulr) Mulr(register, operation);
+            else if (c == Codes.muli) Muli(register, operation);
+            else if (c == Codes.banr) Banr(register, operation);
+            else if (c == Codes.bani) Bani(register, operation);
+            else if (c == Codes.borr) Borr(register, operation);
+            else if (c == Codes.bori) Bori(register, operation);
+            else if (c == Codes.setr) Setr(register, operation);
+            else if (c == Codes.seti) Seti(register, operation);
+            else if (c == Codes.gtir) Gtir(register, operation);
+            else if (c == Codes.gtri) Gtri(register, operation);
+            else if (c == Codes.gtrr) Gtrr(register, operation);
+            else if (c == Codes.eqir) Eqir(register, operation);
+            else if (c == Codes.eqri) Eqri(register, operation);
+            else if (c == Codes.eqrr) Eqrr(register, operation);
         }
 
         private void Addr(int[] register)
@@ -233,7 +105,7 @@ namespace AdventOfCode2018.Day19
             int r = Instruction[0];
             int i = Instruction[1];
             int outr = Instruction[2];
-        
+
             register[outr] = register[r] * i;
         }
 
@@ -343,6 +215,148 @@ namespace AdventOfCode2018.Day19
             register[outr] = (register[r1] == register[r2]) ? 1 : 0;
         }
 
+        private void Addr(int[] register, int[] operation)
+        {
+            int r1 = operation[1];
+            int r2 = operation[2];
+            int outr = operation[3];
+
+            register[outr] = register[r1] + register[r2];
+        }
+
+        private void Addi(int[] register, int[] operation)
+        {
+            int r = operation[1];
+            int i = operation[2];
+            int outr = operation[3];
+
+            register[outr] = register[r] + i;
+        }
+
+        private void Mulr(int[] register, int[] operation)
+        {
+            int r1 = operation[1];
+            int r2 = operation[2];
+            int outr = operation[3];
+
+            register[outr] = register[r1] * register[r2];
+        }
+
+        private void Muli(int[] register, int[] operation)
+        {
+            int r = operation[1];
+            int i = operation[2];
+            int outr = operation[3];
+
+            register[outr] = register[r] * i;
+        }
+
+        private void Banr(int[] register, int[] operation)
+        {
+            int r1 = operation[1];
+            int r2 = operation[2];
+            int outr = operation[3];
+
+            register[outr] = register[r1] & register[r2];
+        }
+
+        private void Bani(int[] register, int[] operation)
+        {
+            int r = operation[1];
+            int i = operation[2];
+            int outr = operation[3];
+
+            register[outr] = register[r] & i;
+        }
+
+        private void Borr(int[] register, int[] operation)
+        {
+            int r1 = operation[1];
+            int r2 = operation[2];
+            int outr = operation[3];
+
+            register[outr] = register[r1] | register[r2];
+        }
+
+        private void Bori(int[] register, int[] operation)
+        {
+            int r = operation[1];
+            int i = operation[2];
+            int outr = operation[3];
+
+            register[outr] = register[r] | i;
+        }
+
+        private void Setr(int[] register, int[] operation)
+        {
+            int r = operation[1];
+            int outr = operation[3];
+
+            register[outr] = register[r];
+        }
+
+        private void Seti(int[] register, int[] operation)
+        {
+            int i = operation[1];
+            int outr = operation[3];
+
+            register[outr] = i;
+        }
+
+        private void Gtir(int[] register, int[] operation)
+        {
+            int r = operation[1];
+            int i = operation[2];
+            int outr = operation[3];
+
+            register[outr] = (i > register[r]) ? 1 : 0;
+        }
+
+        private void Gtri(int[] register, int[] operation)
+        {
+            int i = operation[1];
+            int r = operation[2];
+            int outr = operation[3];
+
+            register[outr] = (register[r] > i) ? 1 : 0;
+        }
+
+        private void Gtrr(int[] register, int[] operation)
+        {
+            int r1 = operation[1];
+            int r2 = operation[2];
+            int outr = operation[3];
+
+            register[outr] = (register[r1] > register[r2]) ? 1 : 0;
+        }
+
+        private void Eqir(int[] register, int[] operation)
+        {
+            int i = operation[1];
+            int r = operation[2];
+            int outr = operation[3];
+
+            register[outr] = (i == register[r]) ? 1 : 0;
+        }
+
+        private void Eqri(int[] register, int[] operation)
+        {
+            int r = operation[1];
+            int i = operation[2];
+            int outr = operation[3];
+
+            register[outr] = (i == register[r]) ? 1 : 0;
+        }
+
+        private void Eqrr(int[] register, int[] operation)
+        {
+            int r1 = operation[1];
+            int r2 = operation[2];
+            int outr = operation[3];
+
+            register[outr] = (register[r1] == register[r2]) ? 1 : 0;
+        }
+
         public static Codes GetCode(string code)
         {
             if (code == "addr") return Codes.addr;
@@ -364,5 +378,4 @@ namespace AdventOfCode2018.Day19
             else return Codes.none;
         }
     }
-    */
 }

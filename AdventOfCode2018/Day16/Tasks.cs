@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
+using AdventOfCode2018.Helper;
 
 namespace AdventOfCode2018.Day16
 {
     class Tasks
     {
-        internal enum Codes { addr, addi, mulr, muli, banr, bani, borr, bori, setr, seti, gtir, gtri, gtrr, eqir, eqri, eqrr, none }
         const string inputPath = @"Day16/Input.txt";
 
         public static void Task1()
@@ -81,7 +79,7 @@ namespace AdventOfCode2018.Day16
 
             Console.WriteLine(threeOrMore);
         }
-
+ 
         public static void Task2()
         {
             List<OpCodeTest> opcodes = new List<OpCodeTest>();
@@ -126,80 +124,80 @@ namespace AdventOfCode2018.Day16
                 }
             }
 
-            Dictionary<int, List<Codes>> operations = new Dictionary<int, List<Codes>>();
+            Dictionary<int, List<OpCode.Codes>> operations = new Dictionary<int, List<OpCode.Codes>>();
 
             foreach (var o in opcodes)
             {
                 if (!operations.ContainsKey(o.Instruction[0]))
                 {
-                    operations.Add(o.Instruction[0], new List<Codes>());
+                    operations.Add(o.Instruction[0], new List<OpCode.Codes>());
                 }
 
-                List<Codes> codes = operations[o.Instruction[0]];
+                List<OpCode.Codes> codes = operations[o.Instruction[0]];
 
                 if (o.Addr())
                 {
-                    if(!codes.Contains(Codes.addr)) codes.Add(Codes.addr);
+                    if(!codes.Contains(OpCode.Codes.addr)) codes.Add(OpCode.Codes.addr);
                 }
                 if (o.Addi())
                 {
-                    if (!codes.Contains(Codes.addi)) codes.Add(Codes.addi);
+                    if (!codes.Contains(OpCode.Codes.addi)) codes.Add(OpCode.Codes.addi);
                 }
                 if (o.Mulr())
                 {
-                    if (!codes.Contains(Codes.mulr)) codes.Add(Codes.mulr);
+                    if (!codes.Contains(OpCode.Codes.mulr)) codes.Add(OpCode.Codes.mulr);
                 }
                 if (o.Muli())
                 {
-                    if (!codes.Contains(Codes.muli)) codes.Add(Codes.muli);
+                    if (!codes.Contains(OpCode.Codes.muli)) codes.Add(OpCode.Codes.muli);
                 }
                 if (o.Banr())
                 {
-                    if (!codes.Contains(Codes.banr)) codes.Add(Codes.banr);
+                    if (!codes.Contains(OpCode.Codes.banr)) codes.Add(OpCode.Codes.banr);
                 }
                 if (o.Bani())
                 {
-                    if (!codes.Contains(Codes.bani)) codes.Add(Codes.bani);
+                    if (!codes.Contains(OpCode.Codes.bani)) codes.Add(OpCode.Codes.bani);
                 }
                 if (o.Borr())
                 {
-                    if (!codes.Contains(Codes.borr)) codes.Add(Codes.borr);
+                    if (!codes.Contains(OpCode.Codes.borr)) codes.Add(OpCode.Codes.borr);
                 }
                 if (o.Bori())
                 {
-                    if (!codes.Contains(Codes.bori)) codes.Add(Codes.bori);
+                    if (!codes.Contains(OpCode.Codes.bori)) codes.Add(OpCode.Codes.bori);
                 }
                 if (o.Setr())
                 {
-                    if (!codes.Contains(Codes.setr)) codes.Add(Codes.setr);
+                    if (!codes.Contains(OpCode.Codes.setr)) codes.Add(OpCode.Codes.setr);
                 }
                 if (o.Seti())
                 {
-                    if (!codes.Contains(Codes.seti)) codes.Add(Codes.seti);
+                    if (!codes.Contains(OpCode.Codes.seti)) codes.Add(OpCode.Codes.seti);
                 }
                 if (o.Gtir())
                 {
-                    if (!codes.Contains(Codes.gtir)) codes.Add(Codes.gtir);
+                    if (!codes.Contains(OpCode.Codes.gtir)) codes.Add(OpCode.Codes.gtir);
                 }
                 if (o.Gtri())
                 {
-                    if (!codes.Contains(Codes.gtri)) codes.Add(Codes.gtri);
+                    if (!codes.Contains(OpCode.Codes.gtri)) codes.Add(OpCode.Codes.gtri);
                 }
                 if (o.Gtrr())
                 {
-                    if (!codes.Contains(Codes.gtrr)) codes.Add(Codes.gtrr);
+                    if (!codes.Contains(OpCode.Codes.gtrr)) codes.Add(OpCode.Codes.gtrr);
                 }
                 if (o.Eqir())
                 {
-                    if (!codes.Contains(Codes.eqir)) codes.Add(Codes.eqir);
+                    if (!codes.Contains(OpCode.Codes.eqir)) codes.Add(OpCode.Codes.eqir);
                 }
                 if (o.Eqri())
                 {
-                    if (!codes.Contains(Codes.eqri)) codes.Add(Codes.eqri);
+                    if (!codes.Contains(OpCode.Codes.eqri)) codes.Add(OpCode.Codes.eqri);
                 }
                 if (o.Eqrr())
                 {
-                    if (!codes.Contains(Codes.eqrr)) codes.Add(Codes.eqrr);
+                    if (!codes.Contains(OpCode.Codes.eqrr)) codes.Add(OpCode.Codes.eqrr);
                 }
             }
 
@@ -244,187 +242,7 @@ namespace AdventOfCode2018.Day16
 
             Console.WriteLine(register[0]);
         }
-    }
-
-    internal class OpCode
-    {
-        Dictionary<int, Tasks.Codes> opcodes;
-
-        public OpCode(Dictionary<int, List<Tasks.Codes>> opcodes)
-        {
-            Opcodes = new Dictionary<int, Tasks.Codes>();
-
-            foreach(var op in opcodes)
-            {
-                Opcodes.Add(op.Key, op.Value[0]);
-            }
-        }
-
-        internal Dictionary<int, Tasks.Codes> Opcodes { get => opcodes; set => opcodes = value; }
-
-        internal void Exec(int[] register, int[] operation)
-        {
-            Tasks.Codes c = Opcodes[operation[0]];
-
-            if (c == Tasks.Codes.addr) Addr(register, operation);
-            else if (c == Tasks.Codes.addi) Addi(register, operation);
-            else if (c == Tasks.Codes.mulr) Mulr(register, operation);
-            else if (c == Tasks.Codes.muli) Muli(register, operation);
-            else if (c == Tasks.Codes.banr) Banr(register, operation);
-            else if (c == Tasks.Codes.bani) Bani(register, operation);
-            else if (c == Tasks.Codes.borr) Borr(register, operation);
-            else if (c == Tasks.Codes.bori) Bori(register, operation);
-            else if (c == Tasks.Codes.setr) Setr(register, operation);
-            else if (c == Tasks.Codes.seti) Seti(register, operation);
-            else if (c == Tasks.Codes.gtir) Gtir(register, operation);
-            else if (c == Tasks.Codes.gtri) Gtri(register, operation);
-            else if (c == Tasks.Codes.gtrr) Gtrr(register, operation);
-            else if (c == Tasks.Codes.eqir) Eqir(register, operation);
-            else if (c == Tasks.Codes.eqri) Eqri(register, operation);
-            else if (c == Tasks.Codes.eqrr) Eqrr(register, operation);
-        }
-
-        private void Addr(int[] register, int[] operation)
-        {
-            int r1 = operation[1];
-            int r2 = operation[2];
-            int outr = operation[3];
-
-            register[outr] = register[r1] + register[r2];
-        }
-
-        private void Addi(int[] register, int[] operation)
-        {
-            int r = operation[1];
-            int i = operation[2];
-            int outr = operation[3];
-
-            register[outr] = register[r] + i;
-        }
-
-        private void Mulr(int[] register, int[] operation)
-        {
-            int r1 = operation[1];
-            int r2 = operation[2];
-            int outr = operation[3];
-
-            register[outr] = register[r1] * register[r2];
-        }
-
-        private void Muli(int[] register, int[] operation)
-        {
-            int r = operation[1];
-            int i = operation[2];
-            int outr = operation[3];
-
-            register[outr] = register[r] * i;
-        }
-
-        private void Banr(int[] register, int[] operation)
-        {
-            int r1 = operation[1];
-            int r2 = operation[2];
-            int outr = operation[3];
-
-            register[outr] = register[r1] & register[r2];
-        }
-
-        private void Bani(int[] register, int[] operation)
-        {
-            int r = operation[1];
-            int i = operation[2];
-            int outr = operation[3];
-
-            register[outr] = register[r] & i;
-        }
-
-        private void Borr(int[] register, int[] operation)
-        {
-            int r1 = operation[1];
-            int r2 = operation[2];
-            int outr = operation[3];
-
-            register[outr] = register[r1] | register[r2];
-        }
-
-        private void Bori(int[] register, int[] operation)
-        {
-            int r = operation[1];
-            int i = operation[2];
-            int outr = operation[3];
-
-            register[outr] = register[r] | i;
-        }
-
-        private void Setr(int[] register, int[] operation)
-        {
-            int r = operation[1];
-            int outr = operation[3];
-
-            register[outr] = register[r];
-        }
-
-        private void Seti(int[] register, int[] operation)
-        {
-            int i = operation[1];
-            int outr = operation[3];
-
-            register[outr] = i;
-        }
-
-        private void Gtir(int[] register, int[] operation)
-        {
-            int r = operation[1];
-            int i = operation[2];
-            int outr = operation[3];
-
-            register[outr] = (i > register[r]) ? 1 : 0;
-        }
-
-        private void Gtri(int[] register, int[] operation)
-        {
-            int i = operation[1];
-            int r = operation[2];
-            int outr = operation[3];
-
-            register[outr] = (register[r] > i) ? 1 : 0;
-        }
-
-        private void Gtrr(int[] register, int[] operation)
-        {
-            int r1 = operation[1];
-            int r2 = operation[2];
-            int outr = operation[3];
-
-            register[outr] = (register[r1] > register[r2]) ? 1 : 0;
-        }
-
-        private void Eqir(int[] register, int[] operation)
-        {
-            int i = operation[1];
-            int r = operation[2];
-            int outr = operation[3];
-
-            register[outr] = (i == register[r]) ? 1 : 0;
-        }
-
-        private void Eqri(int[] register, int[] operation)
-        {
-            int r = operation[1];
-            int i = operation[2];
-            int outr = operation[3];
-
-            register[outr] = (i == register[r]) ? 1 : 0;
-        }
-
-        private void Eqrr(int[] register, int[] operation)
-        {
-            int r1 = operation[1];
-            int r2 = operation[2];
-            int outr = operation[3];
-
-            register[outr] = (register[r1] == register[r2]) ? 1 : 0;
-        }
+        
     }
 
     internal class OpCodeTest

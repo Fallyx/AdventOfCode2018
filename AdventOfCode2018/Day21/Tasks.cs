@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
-using AdventOfCode2018.Day19;
+using AdventOfCode2018.Helper;
 
 namespace AdventOfCode2018.Day21
 {
