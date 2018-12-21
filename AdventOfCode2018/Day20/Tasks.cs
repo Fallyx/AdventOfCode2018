@@ -60,17 +60,24 @@ namespace AdventOfCode2018.Day20
             }
 
             Console.WriteLine(rooms.Max(r => r.Distance));
-            Console.WriteLine(rooms.Count(r => r.Distance >= 1000) - 2);
+            Console.WriteLine(rooms.Count(r => r.Distance >= 1000));
         }
 
         private static Room AddRoom(int x, int y, Room parent)
         {
-            if(rooms.Any(r => r.X == x && r.Y == y)) return parent;
+            Room newRoom;
 
-            Room newRoom = new Room(x, y, parent.Distance + 1);
-            rooms.Add(newRoom);
+            if (rooms.Any(r => r.X == x && r.Y == y))
+            {
+                newRoom = rooms.Find(r => r.X == x && r.Y == y);
+                newRoom.Distance = Math.Min(newRoom.Distance, parent.Distance + 1);
+            }
+            else
+            {
+                newRoom = new Room(x, y, parent.Distance + 1);
+                rooms.Add(newRoom);
+            }
 
-            parent.RoomsNextDoor.Add(newRoom);
             return newRoom;
         }
     }
@@ -79,7 +86,6 @@ namespace AdventOfCode2018.Day20
     {
         private int x;
         private int y;
-        private List<Room> roomsNextDoor;
         private int dist;
 
         public Room(int x, int y, int dist)
@@ -87,12 +93,10 @@ namespace AdventOfCode2018.Day20
             X = x;
             Y = y;
             Distance = dist;
-            RoomsNextDoor = new List<Room>();
         }
 
         public int X { get => x; set => x = value; }
         public int Y { get => y; set => y = value; }
         public int Distance { get => dist; set => dist = value; }
-        internal List<Room> RoomsNextDoor { get => roomsNextDoor; set => roomsNextDoor = value; }
     }
 }
