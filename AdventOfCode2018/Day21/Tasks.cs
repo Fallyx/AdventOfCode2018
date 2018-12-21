@@ -7,7 +7,7 @@ namespace AdventOfCode2018.Day21
 {
     class Tasks
     {
-        const string inputPath = @"Day19/Input.txt";
+        const string inputPath = @"Day21/Input.txt";
         internal enum Codes { addr, addi, mulr, muli, banr, bani, borr, bori, setr, seti, gtir, gtri, gtrr, eqir, eqri, eqrr, none }
 
         public static void Task1()
@@ -43,30 +43,27 @@ namespace AdventOfCode2018.Day21
                 }
             }
 
-            for(int i = 0; i < 200; i++)
+            registers = new int[6];
+            int counter = 0;
+            instrPt = 0;
+
+            while (instrPt < instructions.Count)
             {
-                registers = new int[6];
-                registers[0] = i;
-                int counter = 0;
-                instrPt = 0;
+                registers[ipIdx] = instrPt;
 
-                while (instrPt < instructions.Count)
+                if(instrPt == 28)
                 {
-                    registers[ipIdx] = instrPt;
-
-                    instructions[instrPt].Exec(registers);
-
-                    instrPt = registers[ipIdx];
-                    instrPt++;
-                    counter++;
+                    break;
                 }
 
-                r0s.Add(i, counter);
-            }
+                instructions[instrPt].Exec(registers);
 
-            
+                instrPt = registers[ipIdx];
+                instrPt++;
+                counter++;
+            }           
 
-            Console.WriteLine(r0s.Min(r => r.Value));
+            Console.WriteLine(registers[2]);
         }
 
         public static void Task2()
@@ -323,8 +320,8 @@ namespace AdventOfCode2018.Day21
 
         private void Gtir(int[] register)
         {
-            int r = Instruction[0];
-            int i = Instruction[1];
+            int i = Instruction[0];
+            int r = Instruction[1];
             int outr = Instruction[2];
 
             register[outr] = (i > register[r]) ? 1 : 0;
@@ -332,8 +329,8 @@ namespace AdventOfCode2018.Day21
 
         private void Gtri(int[] register)
         {
-            int i = Instruction[0];
-            int r = Instruction[1];
+            int r = Instruction[0];
+            int i = Instruction[1];
             int outr = Instruction[2];
 
             register[outr] = (register[r] > i) ? 1 : 0;

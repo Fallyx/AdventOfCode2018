@@ -309,8 +309,8 @@ namespace AdventOfCode2018.Day19
 
         private void Gtir(int[] register)
         {
-            int r = Instruction[0];
-            int i = Instruction[1];
+            int i = Instruction[0];
+            int r = Instruction[1];
             int outr = Instruction[2];
 
             register[outr] = (i > register[r]) ? 1 : 0;
@@ -318,8 +318,8 @@ namespace AdventOfCode2018.Day19
 
         private void Gtri(int[] register)
         {
-            int i = Instruction[0];
-            int r = Instruction[1];
+            int r = Instruction[0];
+            int i = Instruction[1];
             int outr = Instruction[2];
 
             register[outr] = (register[r] > i) ? 1 : 0;
