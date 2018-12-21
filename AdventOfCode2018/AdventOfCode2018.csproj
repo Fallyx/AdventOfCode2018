@@ -64,6 +64,7 @@
     <Compile Include="Day18\Tasks.cs" />
     <Compile Include="Day19\Tasks.cs" />
     <Compile Include="Day20\Tasks.cs" />
+    <Compile Include="Day21\Tasks.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -125,6 +126,8 @@
     <Content Include="Day20\Input.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Day21\Helper.txt" />
+    <Content Include="Day21\Input.txt" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

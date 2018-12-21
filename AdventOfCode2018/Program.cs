@@ -163,7 +163,14 @@ namespace AdventOfCode2018
             swDay.Restart();
             Day20.Tasks.Task1and2();
             swDay.Stop();
-            Console.WriteLine($"Day 19 elapsed time: {swDay.Elapsed}");
+            Console.WriteLine($"Day 20 elapsed time: {swDay.Elapsed}");
+            #endregion
+
+            #region day 21
+            swDay.Restart();
+            Day21.Tasks.Task1();
+            swDay.Stop();
+            Console.WriteLine($"Day 21 elapsed time: {swDay.Elapsed}");
             #endregion
 
             swTot.Stop();
